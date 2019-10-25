@@ -1,41 +1,44 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 
 namespace AzureSQL.DevelopmentBestPractices
 {
-    class ExecutionInfo {
+    class ExecutionInfo
+    {
         public int ServerProcessId = 0;
         public string ServiceLevelObjective = String.Empty;
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"SPID: {ServerProcessId}, SLO: {ServiceLevelObjective}";
         }
     }
 
-    class ResilientConnectionSample
-    {     
-        // Added all error code listed here: "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages"
-        // Added Error Code 0 to automatically handle killed connections
-        // Added Error Code 4891 to automatically handle "Insert bulk failed due to a schema change of the target table" error
-        // Added Error Code 10054 to handle "The network path was not found" error that could happen if connection is severed (e.g.: cable unplugged)
-        // Added Error Code 53 to handle "No such host is known" error that could happen if connection is severed (e.g.: cable unplugged)
-        // Added Error Code 11001 to handle transient network errors
-        // Added Error Code 10065 to handle transient network errors
-        // Added Error Code 10060 to handle transient network errors
-        // Added Error Code 121 to handle transient network errors
-        // Added Error Code 258 to handle transient login errors
+    class SampleOptions
+    {
+        public int SampleId = 0;        
+        public int SecondsConnectionStayOpen = 0;
+        public int SecondsBetweenQueries = 0;
+        public int SecondsQueryWillExecute = 0;
+        public CancellationToken Token = CancellationToken.None;
+    }
 
-        private readonly List<int> _transientErrors = new List<int>() { 
+    class ResilientConnectionSample
+    {
+        // Added all error code listed here: "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages"
+        // Plus all code experimentally observed during a loss of network connection (eg: cable unplugged)
+        private readonly List<int> _transientErrors = new List<int>() {
                 0, 53, 121, 258, 4891, 10054, 18456, 4060, 40197, 40501, 40613, 49918, 49919, 49920, 10054, 11001, 10065, 10060, 10051
             };
         private int _maxAttempts = 5;
         private int _delay = 5; // seconds
-
         private string _connectionString = "";
-      
+
         public ResilientConnectionSample(string connectionString)
         {
             _connectionString = connectionString;
@@ -43,52 +46,124 @@ namespace AzureSQL.DevelopmentBestPractices
 
         public void RunSample()
         {
-            do {
-                ExecuteSampleQuery();                
-            } while (true);
+            var source = new CancellationTokenSource();
+            var token = source.Token;
+
+            var tests = new List<SampleOptions>();
+
+            tests.Add(new SampleOptions() {
+                SampleId = 1,
+                SecondsBetweenQueries = 2,
+                SecondsConnectionStayOpen = 0,
+                SecondsQueryWillExecute = 0,
+                Token = token                
+            });
+
+            tests.Add(new SampleOptions() {
+                SampleId = 2,
+                SecondsBetweenQueries = 0,
+                SecondsConnectionStayOpen = 2,
+                SecondsQueryWillExecute = 0,
+                Token = token                
+            });
+
+             tests.Add(new SampleOptions() {
+                SampleId = 3,
+                SecondsBetweenQueries = 0,
+                SecondsConnectionStayOpen = 0,
+                SecondsQueryWillExecute = 2,
+                Token = token                
+            });
+
+            var tasks = new List<Task>();
+            foreach(var t in tests)
+            {
+                tasks.Add(Task.Run(() => ExecuteSampleQuery(t)));
+            }
+            
+            Console.WriteLine("Press any key to terminate the application...");
+            Console.ReadKey(true);
+            
+            source.Cancel();
+            Console.WriteLine("Cancel requested...");            
+            Task.WaitAll(tasks.ToArray());            
+
+            Console.WriteLine("Done");            
         }
 
-        public void ExecuteSampleQuery()
-        {
-            int attempts = 0;      
-            int waitTime = attempts * _delay;
+        public void ExecuteSampleQuery(SampleOptions options)
+        {            
+            var waitFor = string.Empty;
+            if (options.SecondsQueryWillExecute >= 0) {
+                waitFor = $"WAITFOR DELAY '00:00:{options.SecondsQueryWillExecute:00}';";
+            }
+            
+            var query = $@"
+                BEGIN TRAN; 
+                    INSERT INTO dbo.TestResiliency DEFAULT VALUES; 
+                    {waitFor}
+                COMMIT TRAN; 
+                SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
 
-            while (attempts < _maxAttempts)
+            // var query = $@"{waitFor} SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
+
+            while (!options.Token.IsCancellationRequested)
             {
-                attempts += 1;
-                
-                SqlConnection conn = null;                
-                var csb = new SqlConnectionStringBuilder(_connectionString);                
-                csb.ConnectTimeout = waitTime;
-                try
-                {                    
-                    conn = new SqlConnection(_connectionString);                            
-                    var ei = conn.QuerySingle<ExecutionInfo>(
-                        "INSERT INTO dbo.TestResiliency DEFAULT VALUES; WAITFOR DELAY '00:00:02'; SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective",
-                        commandTimeout: waitTime
-                        );
-                    Console.WriteLine($"{DateTime.Now.ToString("o")} > {ei}");
-                    attempts = int.MaxValue;
-                }
-                catch (SqlException se)
+                int attempts = 0;
+                int waitTime = attempts * _delay;
+
+                while (attempts < _maxAttempts)
                 {
-                    if (_transientErrors.Contains(se.Number))
-                    {
-                        waitTime = attempts * _delay;
+                    attempts += 1;
 
-                        Console.WriteLine($"Transient error caught. Waiting {waitTime} seconds and then trying again...");
-                        Console.WriteLine($"Error: [{se.Number}] {se.Message}");
-
-                        Task.Delay(waitTime * 1000).Wait();
-                    }
-                    else
+                    SqlConnection conn = null;
+                    var csb = new SqlConnectionStringBuilder(_connectionString);
+                    csb.ConnectTimeout = waitTime;
+                    try
                     {
-                        Console.WriteLine($"Unmanaged Error: [{se.Number}] {se.Message}");
-                        throw;
+                        conn = new SqlConnection(_connectionString);
+
+                        if (options.SecondsConnectionStayOpen >= 0) {
+                            if (options.Token.IsCancellationRequested) return;
+                            conn.Open();
+                            Task.Delay(options.SecondsConnectionStayOpen * 1000).Wait();                        
+                        }
+                        
+                        var ei = conn.QuerySingle<ExecutionInfo>(                            
+                            query, commandTimeout: waitTime
+                            );
+
+                        if (conn.State == ConnectionState.Open) conn.Close();
+                        
+                        if (options.SecondsBetweenQueries >= 0) {
+                            if (options.Token.IsCancellationRequested) return;
+                            Task.Delay(options.SecondsBetweenQueries * 1000).Wait();                       
+                        }                         
+
+                        Console.WriteLine($"[{options.SampleId:00}] {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} > {ei}");
+                        attempts = int.MaxValue;
                     }
-                }
-                finally {
-                    conn?.Close();
+                    catch (SqlException se)
+                    {
+                        if (_transientErrors.Contains(se.Number))
+                        {
+                            waitTime = attempts * _delay;
+
+                            Console.WriteLine($"[{options.SampleId:00}] Transient error caught. Waiting {waitTime} seconds and then trying again...");
+                            Console.WriteLine($"[{options.SampleId:00}] Error: [{se.Number}] {se.Message}");
+
+                            Task.Delay(waitTime * 1000).Wait();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[{options.SampleId:00}] Unmanaged Error: [{se.Number}] {se.Message}");                            
+                            throw;
+                        }
+                    }
+                    finally
+                    {
+                        conn?.Close();
+                    }
                 }
             }
         }
