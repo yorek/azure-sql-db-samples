@@ -14,7 +14,7 @@ namespace AzureSQL.DevelopmentBestPractices
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("app-config.json", optional: false, reloadOnChange: false)                
+                .AddJsonFile("app.config.json", optional: false, reloadOnChange: false)                
                 .Build();                 
 
             CONNECTION_STRING = config["connection-string"];

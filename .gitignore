@@ -332,4 +332,4 @@ ASALocalRun/
 # Other files and folders
 .vscode/
 app.config
-app-config*
+app.config*

@@ -110,19 +110,19 @@ namespace AzureSQL.DevelopmentBestPractices
             while (!options.Token.IsCancellationRequested)
             {
                 int attempts = 0;
-                int waitTime = attempts * _delay;
+                int waitTime = 0;
+
+                var csb = new SqlConnectionStringBuilder(_connectionString);
+                csb.ConnectTimeout = waitTime;
+
+                var  conn = new SqlConnection(_connectionString);
 
                 while (attempts < _maxAttempts)
                 {
                     attempts += 1;
-
-                    SqlConnection conn = null;
-                    var csb = new SqlConnectionStringBuilder(_connectionString);
-                    csb.ConnectTimeout = waitTime;
+                    
                     try
-                    {
-                        conn = new SqlConnection(_connectionString);
-
+                    {                        
                         if (options.SecondsConnectionStayOpen >= 0) {
                             if (options.Token.IsCancellationRequested) return;
                             conn.Open();

@@ -1,32 +1,8 @@
-CREATE TABLE dbo.TestResiliency
-(
-	Id INT IDENTITY NOT NULL PRIMARY KEY,
-	InsertedAt DATETIME2 NOT NULL DEFAULT(SYSUTCDATETIME()),
-	SomeUniqueValue UNIQUEIDENTIFIER DEFAULT(NEWID())
+DROP TABLE IF EXISTS [dbo].[TestResiliency];
+
+CREATE TABLE [dbo].[TestResiliency](
+	[Id] [INT] IDENTITY(1,1) NOT NULL PRIMARY KEY CLUSTERED,
+	[InsertedAt] [DATETIME2](7) NOT NULL DEFAULT (SYSUTCDATETIME()),
+	[CurrentSLO] [NVARCHAR](100) NOT NULL DEFAULT (CONVERT([NVARCHAR](100),DATABASEPROPERTYEX(DB_NAME(DB_ID()),'ServiceObjective'))),
 );
 
-/*
-	Test Query
-*/
-WITH cte AS
-(
-	SELECT 
-		*,
-		PrevSLOAt = LAG(InsertedAt, 1) OVER (ORDER BY Id),
-		PrevSLO = LAG(CurrentSLO, 1) OVER (ORDER BY Id)
-	FROM 
-		dbo.[TestResiliency] 
-)
-SELECT
-	FromSLO = [cte].[PrevSLO],
-	ToSLO = [cte].[CurrentSLO],
-	[StartedAt] = cte.[PrevSLOAt],
-	FinishedAt = [cte].[InsertedAt],
-	DATEDIFF(SECOND, [cte].[PrevSLOAt], [cte].[InsertedAt]) AS ElapsedSecs
-FROM
-	[cte]
-WHERE
-	[cte].[CurrentSLO] != [cte].[PrevSLO]
-ORDER BY 
-	Id
-;
