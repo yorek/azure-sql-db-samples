@@ -105,14 +105,13 @@ namespace AzureSQL.DevelopmentBestPractices
                 COMMIT TRAN; 
                 SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
 
-            // var query = $@"{waitFor} SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
+            var csb = new SqlConnectionStringBuilder(_connectionString);
+            Console.WriteLine($"Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
 
             while (!options.Token.IsCancellationRequested)
             {
                 int attempts = 0;
                 int waitTime = 0;
-
-                var csb = new SqlConnectionStringBuilder(_connectionString);
                 csb.ConnectTimeout = waitTime;
 
                 var  conn = new SqlConnection(_connectionString);
