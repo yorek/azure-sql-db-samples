@@ -7,11 +7,11 @@ $sqlLogin=""
 $sqlPassword=""
 
 # Update the following three variables
-# to match your Azure enviroment and file position
+# to match your Azure environment and file position
 $sqlResourceGroup=""
 $sqlServer=""
 $sqlDatabase=""
-$storageResourceGroup="WideWorldImportersFull"
+$storageResourceGroup=""
 $storageAccount=""
 
 $storageKey=$(Get-AzStorageAccountKey -ResourceGroupName "$storageResourceGroup" -StorageAccountName "$storageAccount").Value[0]
