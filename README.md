@@ -7,3 +7,8 @@ Make sure you have an Azure SQL DB database to use. If you don't have an Azure a
 
 https://azure.microsoft.com/en-us/free/free-account-faq/
 
+### Step 1 - Create a Database
+
+### Step 2 - Restore WideWorldImporters
+
+## Sample Index
