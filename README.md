@@ -1,5 +1,6 @@
-# azure-sql-db-best-pratices
-Best pratices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
+# Azure SQL DB Best Practices
+
+Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
 
 ## Running the samples
 
