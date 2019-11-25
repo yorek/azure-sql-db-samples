@@ -16,3 +16,6 @@ First, you need a database to run the samples provided in this repo. While you c
 
 1. [Create Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal)
 2. [Restore WideWorldImporters from .bacpac](./general/01-restore-database)
+
+### Resilient Connections to Azure SQL DB
+
