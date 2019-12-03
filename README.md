@@ -12,7 +12,7 @@ https://azure.microsoft.com/en-us/free/free-account-faq/
 
 ### Restore WideWorldImporters Database
 
-First, you need a database to run the samples provided in this repo. While you can use any database you already have, by just adjusting the samples to use your tables, it is recommended to install and use the sample database WideWorldImporters as starting to point to run samples.
+Easily restore a sample database to play with Azure SQL. All the samples in this repo will require a sample database. While you can use any database you already have, by just adjusting the samples to use your tables, it is recommended to install and use the sample database WideWorldImporters as starting to point to run samples.
 
 1. [Create Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal)
 2. [Restore WideWorldImporters from .bacpac](./general/01-restore-database)
