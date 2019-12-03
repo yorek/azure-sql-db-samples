@@ -1,6 +1,6 @@
-# Azure SQL DB Best Practices
+# Azure SQL DB Samples and Best Practices
 
-Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
+Samples and Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
 
 ## Running the samples
 
