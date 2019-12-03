@@ -19,3 +19,10 @@ Easily restore a sample database to play with Azure SQL. All the samples in this
 
 ### Resilient Connections to Azure SQL DB
 
+Connecting to a cloud resources means that you have to take care of managing transient errors so that your application can always provide a great user experience. 
+
+A transient error, also known as a transient fault, has an underlying cause that soon resolves itself. An occasional cause of transient errors is when the Azure system quickly shifts hardware resources to better load-balance various workloads. Most of these reconfiguration events finish in less than 60 seconds. During this reconfiguration time span, you might have connectivity issues to SQL Database. (Ref. [Working with SQL Database connection issues and transient errors](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connectivity-issues)).
+
+The [Resilient Connections](./02-resilient-connections.md) samples shows how you can create applications that can gracefully handle those situations.
+
+
