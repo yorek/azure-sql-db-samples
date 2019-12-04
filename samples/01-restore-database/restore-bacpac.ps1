@@ -2,6 +2,13 @@
 # https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0
 # and upload it to an Azure Storage Account of your choice
 
+# Update the following variables to set the correct Azure SQL tier and the sample you want to import.
+# WideWorldImporters-Full requires Premium or BusinessCritical, while
+# WideWorldImporters-Standard requires Standard or GeneralPurpose
+$sqlEdition="BusinessCritical"
+$sqlSLO="BC_Gen5_2"
+$bacpacFile="WideWorldImporters-Full.bacpac"
+
 # Specify your credentials
 $sqlLogin=""
 $sqlPassword=""
@@ -23,9 +30,9 @@ $importRequest = New-AzSqlDatabaseImport `
     -DatabaseMaxSizeBytes "$(10 * 1024 * 1024 * 1024)" `
     -StorageKeyType "StorageAccessKey" `
     -StorageKey "$storageKey" `
-    -StorageUri "https://$storageAccount.blob.core.windows.net/WideWorldImporters-Full.bacpac" `
-    -Edition "BusinessCritical" `
-    -ServiceObjectiveName "BC_Gen5_2" `
+    -StorageUri "https://$storageAccount.blob.core.windows.net/$bacpacFile" `
+    -Edition "$sqlEdition" `
+    -ServiceObjectiveName "$sqlSLO" `
     -AdministratorLogin "$sqlLogin" `
     -AdministratorLoginPassword $(ConvertTo-SecureString -String "$sqlPassword" -AsPlainText -Force)
 
