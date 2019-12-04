@@ -4,22 +4,30 @@ setlocal
 @rem Make sure you have the latest DacFx version from 
 @rem https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-ver15#deployreport-parameters-and-properties
 
+@rem Update the following variables to set the correct Azure SQL tier 
+@rem depending on the sample you want to import.
+@rem WideWorldImporters-Full requires Premium or BusinessCritical, while
+@rem WideWorldImporters-Standard requires Standard or GeneralPurpose
+set azure_sql_tier="GeneralPurpose"
+set azure_sql_slo="GP_Gen5_2"
+
 @rem Update the following three variables
 @rem to match your Azure environment and file position
-set azure_sql_database=WideWorldImportersFull
+set azure_sql_database=WideWorldImportersStandard
 set sqlpackage_path="C:\Program Files\Microsoft SQL Server\150\DAC\bin\SqlPackage.exe"
-set bacpac_path="C:\Users\damauri\Downloads\WideWorldImporters-Full.bacpac"
+set bacpac_path="C:\Users\damauri\Downloads\WideWorldImporters-Standard.bacpac"
+
 
 set azure_sql_server=%1
 set azure_sql_login=%2
 set azure_sql_password=%3
 
 if "%azure_sql_server%"=="" (
-    goto usage
+    goto USAGE
 )
 
 if "%azure_sql_login%"=="" (
-    goto usage
+    goto USAGE
 )
 
 if "%azure_sql_password%"=="" (
@@ -27,7 +35,7 @@ if "%azure_sql_password%"=="" (
 )
 
 echo Running...
-%sqlpackage_path% /a:import /tcs:"Data Source=%azure_sql_server%.database.windows.net;Initial Catalog=%azure_sql_database%;User Id=%azure_sql_login%;Password=%azure_sql_password%" /sf:%bacpac_path% /p:DatabaseEdition="BusinessCritical" /p:DatabaseServiceObjective="BC_Gen5_2"
+%sqlpackage_path% /a:import /tcs:"Data Source=%azure_sql_server%.database.windows.net;Initial Catalog=%azure_sql_database%;User Id=%azure_sql_login%;Password=%azure_sql_password%" /sf:%bacpac_path% /p:DatabaseEdition=%azure_sql_tier% /p:DatabaseServiceObjective=%azure_sql_slo%
 goto END
 
 :USAGE
