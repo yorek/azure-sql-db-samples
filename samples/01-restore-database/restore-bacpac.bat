@@ -17,7 +17,7 @@ set azure_sql_database=WideWorldImportersStandard
 set sqlpackage_path="C:\Program Files\Microsoft SQL Server\150\DAC\bin\SqlPackage.exe"
 set bacpac_path="C:\Users\***REMOVED***\Downloads\WideWorldImporters-Standard.bacpac"
 
-
+@rem Validate input parameters
 set azure_sql_server=%1
 set azure_sql_login=%2
 set azure_sql_password=%3
