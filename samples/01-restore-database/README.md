@@ -2,9 +2,7 @@
 
 Azure SQL, at the moment, support .bacpac file as a medium for creating backups that can be used also outside Azure. 
 
-If you're not familiar with Azure, a good quickstart on how to import an Azure SQL DB using the portal or other tools is available here:
-
-https://docs.microsoft.com/en-us/azure/sql-database/sql-database-import?tabs=azure-powershell 
+> If you're not familiar with Azure, a good quickstart on how to import an Azure SQL DB using the portal or other tools is available here: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-import?tabs=azure-powershell 
 
 If you are already familiar with Azure products like Azure Blob Store and AZ CLI or Powershell, read on:
 
