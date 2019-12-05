@@ -14,7 +14,7 @@ Download the .bacpac file you want to restore on your machine. For WideWorldImpo
 
 [WideWorldImporters v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0)
 
-Make sure you download the *Full* database `WideWorldImporters-Full`.
+You can download either the *Full* database `WideWorldImporters-Full` or the *Standard* one `WideWorldImporters-Standard`. Please note that the *Full* will require a Premium or Business Critical service tier to be restored. 
 
 ## Restore database using SqlPackage
 
