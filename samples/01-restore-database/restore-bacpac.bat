@@ -15,7 +15,7 @@ set azure_sql_slo="GP_Gen5_2"
 @rem to match your Azure environment and file position
 set azure_sql_database=WideWorldImportersStandard
 set sqlpackage_path="C:\Program Files\Microsoft SQL Server\150\DAC\bin\SqlPackage.exe"
-set bacpac_path="C:\Users\damauri\Downloads\WideWorldImporters-Standard.bacpac"
+set bacpac_path="C:\Downloads\WideWorldImporters-Standard.bacpac"
 
 @rem Validate input parameters
 set azure_sql_server=%1

@@ -2,6 +2,7 @@
 
 Azure SQL, at the moment, support .bacpac file as a medium for creating backups that can be used also outside Azure. 
 
+<<<<<<< HEAD
 If you're not familiar with Azure, a good quickstart on how to import an Azure SQL DB using the portal or other tools is available here:
 
 https://docs.microsoft.com/en-us/azure/sql-database/sql-database-import?tabs=azure-powershell 
@@ -11,6 +12,13 @@ If you are already familiar with Azure products like Azure Blob Store and AZ CLI
 There are several ways to restore a .bacpac file to Azure: using the [SqlPackage](https://docs.microsoft.com/en-us/sql/tools/sqlpackage) tool, using [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) or using [Powershell](https://docs.microsoft.com/en-us/powershell/azure/).
 
 > Azure SQL comes with very high security by default. Make sure your Azure SQL Server allows connection from the machine you are using. Check how to configure the firewall properly here: [Azure SQL Firewall Configuration](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure#from-the-database-overview-page).
+=======
+**If you're not familiar with Azure**, a good quickstart on how to import an Azure SQL DB using the portal or other tools is available here: [Quickstart: Import a BACPAC file to a database in Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-import). **If you are already familiar with Azure** products like Azure Blob Store and AZ CLI or Powershell, read on.
+
+There are several ways to restore a .bacpac file to Azure: using the [SqlPackage](https://docs.microsoft.com/en-us/sql/tools/sqlpackage) tool, using [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) or using [Powershell](https://docs.microsoft.com/en-us/powershell/azure/).
+
+**Azure SQL comes with very high security by default**. Make sure your Azure SQL Server allows connection from the machine you are using. Check how to configure the firewall properly here: [Azure SQL Firewall Configuration](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure#from-the-database-overview-page).
+>>>>>>> f39224612090dfd22efb7ad641caacd1deb4c02f
 
 ## Download WideWorldImporters backup
 
@@ -18,7 +26,11 @@ Download the .bacpac file you want to restore on your machine. For WideWorldImpo
 
 [WideWorldImporters v1.0](https://github.com/Microsoft/sql-server-samples/releases/tag/wide-world-importers-v1.0)
 
+<<<<<<< HEAD
 Make sure you download the *Full* database `WideWorldImporters-Full`.
+=======
+You can download either the *Full* database `WideWorldImporters-Full` or the *Standard* one `WideWorldImporters-Standard`. Please note that the *Full* will require a Premium or Business Critical service tier to be restored. 
+>>>>>>> f39224612090dfd22efb7ad641caacd1deb4c02f
 
 ## Restore database using SqlPackage
 
