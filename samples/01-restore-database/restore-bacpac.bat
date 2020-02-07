@@ -13,7 +13,7 @@ set azure_sql_slo="HS_Gen5_2"
 
 @rem Update the following three variables
 @rem to match your Azure environment and file position
-set azure_sql_database=WideWorldImportersStandard3
+set azure_sql_database=WideWorldImportersStandard
 set sqlpackage_path="C:\Program Files\Microsoft SQL Server\150\DAC\bin\SqlPackage.exe"
 set bacpac_path="C:\Work\_dbs\WideWorldImporters-Standard.bacpac"
 
