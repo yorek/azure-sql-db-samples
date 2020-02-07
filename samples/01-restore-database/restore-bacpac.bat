@@ -7,15 +7,15 @@ setlocal
 @rem Update the following variables to set the correct Azure SQL tier 
 @rem depending on the sample you want to import.
 @rem WideWorldImporters-Full requires Premium or BusinessCritical, while
-@rem WideWorldImporters-Standard requires Standard or GeneralPurpose
-set azure_sql_tier="GeneralPurpose"
-set azure_sql_slo="GP_Gen5_2"
+@rem WideWorldImporters-Standard requires Standard or GeneralPurpose or Hyperscale
+set azure_sql_tier="Hyperscale"
+set azure_sql_slo="HS_Gen5_2"
 
 @rem Update the following three variables
 @rem to match your Azure environment and file position
-set azure_sql_database=WideWorldImportersStandard
+set azure_sql_database=WideWorldImportersStandard3
 set sqlpackage_path="C:\Program Files\Microsoft SQL Server\150\DAC\bin\SqlPackage.exe"
-set bacpac_path="C:\Downloads\WideWorldImporters-Standard.bacpac"
+set bacpac_path="C:\Work\_dbs\WideWorldImporters-Standard.bacpac"
 
 @rem Validate input parameters
 set azure_sql_server=%1
