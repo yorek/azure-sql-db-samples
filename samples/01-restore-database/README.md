@@ -1,4 +1,4 @@
-# 02 - Restore Database
+# 02 - Restore Database in Azure SQL
 
 Azure SQL, at the moment, support .bacpac file as a medium for creating backups that can be used also outside Azure. 
 
