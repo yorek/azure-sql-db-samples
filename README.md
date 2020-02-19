@@ -8,12 +8,22 @@ Make sure you have an Azure SQL DB database to use. If you don't have an Azure a
 
 https://azure.microsoft.com/en-us/free/free-account-faq/
 
+To create a new database, follow the instructions here:
+
+[Create Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal)
+
+or, if you're already comfortable with Azure, you can just execute (using Bash, via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), a Linux environment or [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview))
+
+```bash
+az group create -n <my-resource-group> -l WestUS2
+az sql server create -g <my-resource-group> -n <my-server-name> -u <my-user> -p <my-password>
+az sql db create -g <my-resource-group> --server <my-server-name> -n DevDB --tier BC_Gen5_2
+```
+
 ## Sample Index
 
-### Restore WideWorldImporters Database
+1. [Restore Database in Azure SQL](./samples/01-restore-database): Restoring a database in Azure SQL
+2. Work in progress, will come soon :)
+3. [Work with JSON](./samples/03-json-support): Working with JSON data in Azure SQL
 
-Easily restore a sample database to play with Azure SQL. All the samples in this repo will require a sample database. While you can use any database you already have, by just adjusting the samples to use your tables, it is recommended to install and use the sample database WideWorldImporters as starting to point to run samples.
-
-1. [Create Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal)
-2. [Restore WideWorldImporters from .bacpac](./samples/01-restore-database)
 
