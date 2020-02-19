@@ -56,5 +56,15 @@
             "Richard"
         ],
         "spouse": "Andrew Callaghan"
-    }
+    },
+    [
+        {
+            "firstName": "Mark",
+            "lastName": "Brown"
+        },
+        {
+            "firstName": "Mike",
+            "lastName": "Green"
+        }
+    ]
 ]
