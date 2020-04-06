@@ -333,3 +333,4 @@ ASALocalRun/
 .vscode/
 app.config
 app.config.json
+*.bacpac
