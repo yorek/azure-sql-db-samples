@@ -26,7 +26,7 @@ declare storageLocation="WestUS2"
 declare storageGroup=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 12 | head -n 1)
 declare storageAccount=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 12 | head -n 1)
 
-# Cleaup temporary resources on catch
+# Cleanup temporary resources on catch
 set -e
 trap 'catch $? $LINENO' EXIT
 
@@ -41,10 +41,10 @@ echo "Downloading $bacpacFile..."
 rm $bacpacFile -f
 curl https://github.com/Microsoft/sql-server-samples/releases/download/wide-world-importers-v1.0/$bacpacFile -o ./$bacpacFile -L
 
-echo "Creating temporary Resource Group..."
+echo "Creating temporary Resource Group '$storageGroup'..."
 az group create -n $storageGroup -l $storageLocation
 
-echo "Creating temporary Storage Account..."
+echo "Creating temporary Storage Account '$storageAccount'..."
 az storage account create -g $storageGroup -n $storageAccount --sku Standard_LRS
 
 echo "Getting created Storage Key..."
