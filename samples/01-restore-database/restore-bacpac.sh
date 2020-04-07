@@ -11,7 +11,7 @@ declare bacpacFile="WideWorldImporters-Full.bacpac"
 
 # Update the following variables to set the correct Azure SQL tier and the sample you want to import.
 # WideWorldImporters-Full requires Premium or BusinessCritical, while
-# WideWorldImporters-Standard requires Standard or GeneralPurpose
+# WideWorldImporters-Standard requires Standard or GeneralPurpose or Hyperscale
 declare sqlLogin=""
 declare sqlPassword=""
 declare sqlResourceGroup=""

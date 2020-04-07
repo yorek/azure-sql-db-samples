@@ -8,14 +8,14 @@ $bacpacFile="WideWorldImporters-Full.bacpac"
 
 # Update the following variables to set the correct Azure SQL tier and the sample you want to import.
 # WideWorldImporters-Full requires Premium or BusinessCritical, while
-# WideWorldImporters-Standard requires Standard or GeneralPurpose
+# WideWorldImporters-Standard requires Standard or GeneralPurpose or Hyperscale
 $sqlLogin=""
 $sqlPassword=""
 $sqlResourceGroup=""
 $sqlServer=""
-$sqlDatabase=""
+$sqlDatabase="WWIFULLRestoreTest"
+$sqlEdition="BusinessCritical"
 $sqlSLO="BC_Gen5_2"
-#$sqlEdition="BusinessCritical"
 
 # Set the location to be in the same Region where your Azure SQL is
 $storageLocation="WestUS2"
@@ -42,15 +42,18 @@ $sao = New-AzStorageAccount -ResourceGroupName $storageGroup -Name $storageAccou
 $ctx = $sao.Context
 
 Write-Output "Creating Container..."
-New-AzStorageContainer -Name "bacpac" -Context $ctx
+New-AzStorageContainer -Name "bacpac" -Context $ctx -Permission Blob
 
-Write-Output  "Uploading bacpac..."
+Write-Output "Uploading bacpac..."
 Set-AzStorageBlobContent -File "$localBacpacFile" -Container "bacpac" -Blob $bacpacFile -Context $ctx
 
-Write-Output  "Getting Storage Access Key..."
-$storageKey = $(Get-AzStorageAccountKey -ResourceGroupName "$storageResourceGroup" -StorageAccountName "$storageAccount").Value[0]
+Write-Output "Getting Storage Access Key..."
+$storageKey = $(Get-AzStorageAccountKey -ResourceGroupName $storageGroup -StorageAccountName $storageAccount).Value[0]
 
-Write-Output  "Importing bacpac..."
+Write-Output "Creating Azure SQL database..."
+New-AzSqlDatabase -ResourceGroupName $sqlResourceGroup -ServerName $sqlServer -DatabaseName $sqlDatabase -RequestedServiceObjectiveName $sqlSLO
+
+Write-Output "Importing bacpac..."
 $importRequest = New-AzSqlDatabaseImport `
     -ResourceGroupName "$sqlResourceGroup" `
     -ServerName "$sqlServer" `
@@ -59,10 +62,18 @@ $importRequest = New-AzSqlDatabaseImport `
     -StorageKeyType "StorageAccessKey" `
     -StorageKey "$storageKey" `
     -StorageUri "https://$storageAccount.blob.core.windows.net/bacpac/$bacpacFile" `
-    -ServiceObjectiveName "$sqlSLO" `
     -AdministratorLogin "$sqlLogin" `
-    -AdministratorLoginPassword $(ConvertTo-SecureString -String "$sqlPassword" -AsPlainText -Force)
+    -AdministratorLoginPassword $(ConvertTo-SecureString -String "$sqlPassword" -AsPlainText -Force) `
+    -Edition $sqlEdition `
+    -ServiceObjectiveName $sqlSLO
 
-Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+do {
+    $importStatus = Get-AzSqlDatabaseImportExportStatus -OperationStatusLink $importRequest.OperationStatusLink
+    Start-Sleep -s 10
+} while ($importStatus.Status -eq "InProgress")
 
-#    -Edition "$sqlEdition" `
+# Delete temporary resources
+Write-Output "Deleting temporary resources..."
+Remove-AzResourceGroup -Name $storageGroup -Force -AsJob
+
+Write-Output "Done."
