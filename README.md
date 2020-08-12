@@ -34,7 +34,7 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 2. Work in progress, will come soon :)
 3. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
 4. [Graph Models](./sample/04-graph): _Work In Progress_
-5. [GeoSpatial Support](./sample/04-spatial): _Work In Progress_
-5. [Key-Value Store](./sample/05-key-value): How to implement a Key-Value store with In-Memory tables.
+5. [GeoSpatial Support](./sample/05-spatial): _Work In Progress_
+6. [Key-Value Store](./sample/06-key-value): How to implement a Key-Value store with In-Memory tables.
 
 
