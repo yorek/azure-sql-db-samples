@@ -33,8 +33,8 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 1. [Restore Database](./samples/01-restore-database): Restoring a database in Azure SQL
 2. Work in progress, will come soon :)
 3. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
-4. [Graph Models](./sample/04-graph):
-5. [GeoSpatial Support](./sample/04-spatial):
-5. [Key-Value Store](./sample/05-key-value):
+4. [Graph Models](./sample/04-graph): _Work In Progress_
+5. [GeoSpatial Support](./sample/04-spatial): _Work In Progress_
+5. [Key-Value Store](./sample/05-key-value): How to implement a Key-Value store with In-Memory tables.
 
 
