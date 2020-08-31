@@ -106,11 +106,7 @@ then execute the script from a Powershell terminal:
 ./restore-bacpac.ps1
 ```
 
-## Azure Storage Account 
-
-If you are new to Azure, you can find more info on Azure Storage Account here:
-
-[Create Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal)
+## Azure Storage Explorer
 
 Azure Storage Explorer is a tool that you can use to copy the data into an Azure Blob Container.
 
