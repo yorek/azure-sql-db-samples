@@ -44,15 +44,15 @@ restore-bacpac.bat my-server my-login my-password
 
 ## Restore database using Azure CLI
 
-To restore .bacpac using Azure CLI you need to copy to .bacpac file into an Azure Blob Storage. If you don't have a storage account already, go on and create one:
+To restore .bacpac using Azure CLI you need to copy to .bacpac file into an Azure Blob Storage. The `restore-bacpac.sh` script will:
 
-[Create Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal)
+- create a temporary Azure Storage account for you automatically
+- download the sample .bacpac via curl 
+- upload it to the created Azure Storage account.
+- import it into the specified Azure SQL database.
+- remove the created temporary Azure Storage account
 
-and the use Azure Storage Explorer to copy the data into an Azure Blob Container.
-
-[Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
-
-Once the .bacpac file has been copied into Azure Storage, configure the `restore-bacpac.sh` to make sure the following variables contains the correct values for your resources
+Make sure you configure the `restore-bacpac.sh` so that the following variables contains the correct values for your resources
 
 ```bash
 # Specify your credentials
@@ -76,15 +76,15 @@ then execute the script from a unix shell:
 
 ## Restore database using Powershell
 
-To restore .bacpac using PowerShell you need to copy to .bacpac file into an Azure Blob Storage. If you don't have a storage account already, go on and create one:
+To restore .bacpac using Powershell you need to copy to .bacpac file into an Azure Blob Storage. The `restore-bacpac.sh` script will:
 
-[Create Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal)
+- create a temporary Azure Storage account for you automatically
+- download the sample .bacpac via curl 
+- upload it to the created Azure Storage account.
+- import it into the specified Azure SQL database.
+- remove the created temporary Azure Storage account
 
-and the use Azure Storage Explorer to copy the data into an Azure Blob Container.
-
-[Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
-
-Once the .bacpac file has been copied into Azure Storage, configure the `restore-bacpac.ps1` to make sure the following variables contains the correct values for your resources
+Make sure you configure the `restore-bacpac.ps1` so that the following variables contains the correct values for your resources
 
 ```powershell
 # Specify your credentials
@@ -105,3 +105,14 @@ then execute the script from a Powershell terminal:
 ```powershell
 ./restore-bacpac.ps1
 ```
+
+## Azure Storage Account 
+
+If you are new to Azure, you can find more info on Azure Storage Account here:
+
+[Create Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal)
+
+Azure Storage Explorer is a tool that you can use to copy the data into an Azure Blob Container.
+
+[Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
+
