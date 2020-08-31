@@ -76,10 +76,10 @@ then execute the script from a unix shell:
 
 ## Restore database using Powershell
 
-To restore .bacpac using Powershell you need to copy to .bacpac file into an Azure Blob Storage. The `restore-bacpac.sh` script will:
+To restore .bacpac using Powershell you need to copy to .bacpac file into an Azure Blob Storage. The `restore-bacpac.ps1` script will:
 
 - create a temporary Azure Storage account for you automatically
-- download the sample .bacpac via curl 
+- download the sample .bacpac via WebClient 
 - upload it to the created Azure Storage account.
 - import it into the specified Azure SQL database.
 - remove the created temporary Azure Storage account
