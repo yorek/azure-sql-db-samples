@@ -11,7 +11,7 @@ As Azure SQL adheres to the Open Geospatial Consortium (OGS) standard, you can t
 
 https://clydedacruz.github.io/openstreetmap-wkt-playground/
 
-
+![Openlayers Playground](https://raw.githubusercontent.com/yorek/azure-sql-db-samples/master/samples/05-spatial/openlayers-playground.png)
 
 Transit scheduling, geographic, and real-time data provided by permission of King County
 [King County Metro Developer Resources](https://kingcounty.gov/depts/transportation/metro/travel-options/bus/app-center/developer-resources.aspx)
