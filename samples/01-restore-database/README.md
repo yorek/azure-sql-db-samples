@@ -8,6 +8,10 @@ There are several ways to restore a .bacpac file to Azure: using the [SqlPackage
 
 **Azure SQL comes with very high security by default**. Make sure your Azure SQL Server allows connection from the machine you are using. Check how to configure the firewall properly here: [Azure SQL Firewall Configuration](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure#from-the-database-overview-page).
 
+## Need a bit more context?
+
+If you want learn a bit more around Azure SQL backup, restore, import and export, you can start from here: [Azure SQL & .bacpac the easy way](https://devblogs.microsoft.com/azure-sql/azure-sql-bacpac-the-easy-way)
+
 ## Download WideWorldImporters backup
 
 Download the .bacpac file you want to restore on your machine. For WideWorldImporters sample database, you can find it here:
