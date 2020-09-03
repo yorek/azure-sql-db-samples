@@ -1,3 +1,27 @@
+---
+page_type: sample
+languages:
+- tsql
+- sql
+products:
+- azure
+- azure-sql-database
+description: "Fast Data Loading in Azure SQL DB using Azure Databricks"
+urlFragment: "azure-sql-db-databricks"
+---
+
+# Fast Data Loading in Azure SQL DB using Azure Databricks
+
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+<!-- 
+Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
+
+Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
+
+Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
+-->
+
 # Azure SQL DB Samples and Best Practices
 
 Samples and Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
@@ -34,7 +58,7 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 2. Work in progress, will come soon :)
 3. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
 4. [Graph Models](./samples/04-graph): Graph model sample and references
-5. [GeoSpatial Support](./samples/05-spatial): _Work In Progress_
+5. [GeoSpatial Support](./samples/05-spatial): Working with GeoSpatial data in Azure SQL
 6. [Key-Value Store](./samples/06-key-value): How to implement a Key-Value store with In-Memory tables
 
 
