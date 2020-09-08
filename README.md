@@ -6,11 +6,11 @@ languages:
 products:
 - azure
 - azure-sql-database
-description: "Fast Data Loading in Azure SQL DB using Azure Databricks"
-urlFragment: "azure-sql-db-databricks"
+description: "Azure SQL DB Samples and Best Practices"
+urlFragment: "azure-sql-db-samples"
 ---
 
-# Fast Data Loading in Azure SQL DB using Azure Databricks
+# Azure SQL DB Samples and Best Practices
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
