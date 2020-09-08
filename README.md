@@ -22,8 +22,6 @@ Guidance on onboarding samples to docs.microsoft.com/samples: https://review.doc
 Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
 -->
 
-# Azure SQL DB Samples and Best Practices
-
 Samples and Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
 
 ## Running the samples
