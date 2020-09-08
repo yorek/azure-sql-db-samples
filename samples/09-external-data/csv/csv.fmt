@@ -1,0 +1,7 @@
+13.0
+3
+
+1	SQLCHAR 0	0	,	1	FirstName	""
+2	SQLCHAR 0	0	,	2	LastName	"" 
+3	SQLCHAR 0	0	"\r\n"	3	TwitterHandle	"" 
+
