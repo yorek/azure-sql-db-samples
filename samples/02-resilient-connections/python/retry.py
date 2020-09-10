@@ -1,7 +1,13 @@
+import os
 import pyodbc
 import random
+import sys
+import json
 from tenacity import *
 import logging
+from dotenv import load_dotenv
+ 
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -38,28 +44,27 @@ def is_retriable(value):
     return ret
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(10), after=after_log(logger, logging.DEBUG))
-def my_database_operation():
+def run_test():    
+    tsql = """
+            SET NOCOUNT ON;
+            BEGIN TRAN; 
+                INSERT INTO dbo.TestResiliency DEFAULT VALUES; 
+                WAITFOR DELAY '00:00:02';
+            COMMIT TRAN; 
+            SELECT * FROM (VALUES (CAST(@@SPID AS INT), CAST(DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS SYSNAME))) T(SPID, ServiceObjective) FOR JSON AUTO;"""
 
-    # server = 'tcp:fakeservername.database.windows.net,1433'
-    server = 'tcp:realservername.database.windows.net,1433'
-    database = 'WideWorldImporters-Full'
-    username = ''
-    password = ''
+    while(True):
+        try:
+            cnxn = pyodbc.connect(os.getenv('CONNECTION_STRING'))
+            cursor = cnxn.cursor()
+            with cursor.execute(tsql):
+                row = cursor.fetchone()
+                print(json.loads(row[0]))
+        except Exception as e:
+            #print(e)
+            if isinstance(e, pyodbc.ProgrammingError) or isinstance(e, pyodbc.OperationalError):
+                if is_retriable(int(e.args[0])):
+                    raise
+        pass
 
-    try:
-        cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password+';Connect Timeout=10;')
-        cursor = cnxn.cursor()
-
-        tsql = "SELECT @@VERSION;"
-        #
-        # tsql = "SELECT @@VERSIONNNN;"
-        with cursor.execute(tsql):
-            row = cursor.fetchone()
-            print (str(row[0]))
-    except Exception as e:
-        if isinstance(e,pyodbc.ProgrammingError) or isinstance(e,pyodbc.OperationalError):
-            if is_retriable(int(e.args[0])):
-                raise
-    pass
-
-my_database_operation()
+run_test()

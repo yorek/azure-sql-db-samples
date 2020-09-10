@@ -334,3 +334,5 @@ ASALocalRun/
 app.config
 app.config.json
 *.bacpac
+.env
+env/
