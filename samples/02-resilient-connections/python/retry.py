@@ -2,6 +2,7 @@ import os
 import pyodbc
 import random
 import sys
+import getopt
 import json
 from tenacity import *
 import logging
@@ -43,28 +44,82 @@ def is_retriable(value):
     ret = value in RETRY_CODES
     return ret
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(10), after=after_log(logger, logging.DEBUG))
-def run_test():    
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(10), retry=retry_if_exception_type(pyodbc.Error), after=after_log(logger, logging.DEBUG))
+def run_resilient_test():    
+    conn_str = os.getenv('CONNECTION_STRING')
     tsql = """
             SET NOCOUNT ON;
             BEGIN TRAN; 
                 INSERT INTO dbo.TestResiliency DEFAULT VALUES; 
                 WAITFOR DELAY '00:00:02';
             COMMIT TRAN; 
-            SELECT * FROM (VALUES (CAST(@@SPID AS INT), CAST(DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS SYSNAME))) T(SPID, ServiceObjective) FOR JSON AUTO;"""
-
+            SELECT * FROM (VALUES (CAST(@@SPID AS INT), CAST(DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS SYSNAME))) T(SPID, ServiceObjective) FOR JSON AUTO;"""    
     while(True):
         try:
-            cnxn = pyodbc.connect(os.getenv('CONNECTION_STRING'))
+            cnxn = pyodbc.connect(conn_str)
             cursor = cnxn.cursor()
             with cursor.execute(tsql):
                 row = cursor.fetchone()
-                print(json.loads(row[0]))
+                print(json.loads(row[0])[0])
+        except pyodbc.OperationalError as e:            
+            logger.debug(e);
+            if is_retriable(int(e.args[0])):
+                raise
+        except pyodbc.ProgrammingError as e:            
+            logger.debug(e);            
+            if is_retriable(int(e.args[0])):
+                raise
         except Exception as e:
-            #print(e)
-            if isinstance(e, pyodbc.ProgrammingError) or isinstance(e, pyodbc.OperationalError):
-                if is_retriable(int(e.args[0])):
-                    raise
-        pass
+            logger.debug(type(e));  
+            logger.debug(e);        
+            raise    
+        finally:
+            cursor.close()
 
-run_test()
+def run_simple_test():    
+    conn_str = os.getenv('CONNECTION_STRING')
+    tsql = """
+            SET NOCOUNT ON;
+            BEGIN TRAN; 
+                INSERT INTO dbo.TestResiliency DEFAULT VALUES; 
+                WAITFOR DELAY '00:00:02';
+            COMMIT TRAN; 
+            SELECT * FROM (VALUES (CAST(@@SPID AS INT), CAST(DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS SYSNAME))) T(SPID, ServiceObjective) FOR JSON AUTO;"""    
+    while(True):
+        cnxn = pyodbc.connect(conn_str)
+        cursor = cnxn.cursor()
+        with cursor.execute(tsql):
+            row = cursor.fetchone()
+            print(json.loads(row[0]))
+        cursor.close()
+
+def usage():
+    print('retry.py [-r|--resilient]|[-n|--non-resilient]')
+
+if __name__ == "__main__":
+    test_resiliency = True
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"rn",["resilient", "non-resilient"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+   
+    for opt, arg in opts:
+        logger.debug(opt)
+        if opt == '-h':
+            usage()
+            sys.exit()
+        elif opt in ("-r", "--resilient"):
+            test_resiliency = True
+        elif opt in ("-n", "--non-resilient"):
+            test_resiliency = False
+        else:
+            assert False, "unhandled option"
+
+    if test_resiliency:
+        print('Running test *WITH* a resilient connection.\n')
+        run_resilient_test()
+    else:
+        print('Running test *without* a resilient connection.\n')
+        run_simple_test()
