@@ -21,3 +21,5 @@ Remember that if you don't have Linux environment where you can run [AZ CLI](htt
 [Connect to the database](https://docs.microsoft.com/en-us/azure/azure-sql/database/connect-query-content-reference-guide) using SQL Server Management Studio or Azure Data Studio and run the `./sql/00-setup.sql` to setup the table used in the test.
 
 Now get the connection string using [the portal](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connect-query-dotnet-core#get-adonet-connection-information-optional) or via [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/sql/db?view=azure-cli-latest#az-sql-db-show-connection-string) as it will be needed in the samples.
+
+If you are completely new to Azure SQL, no worries! Here's a full playlist that will help you: [Azure SQL for beginners](https://www.youtube.com/playlist?list=PLlrxD0HtieHi5c9-i_Dnxw9vxBY-TqaeN).
