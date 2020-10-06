@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Dapper;
 using Bogus;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace AzureSQL.DevelopmentBestPractices
 {
@@ -33,12 +34,17 @@ namespace AzureSQL.DevelopmentBestPractices
             return source.Substring(0, l);
         }
 
+        public static string EscapeQuote(this string source)
+        {
+            return source.Replace("'", "''");
+        }
+
     }
 
     public class NetworkLatencySample
     {
         private string _connectionString = "";
-        private const int CUSTOMERS_COUNT = 3000;
+        private const int CUSTOMERS_COUNT = 1000;
 
         public NetworkLatencySample(string connectionString)
         {
@@ -86,6 +92,14 @@ namespace AzureSQL.DevelopmentBestPractices
             Console.WriteLine();
             //Console.ReadKey();
 
+            Console.WriteLine("Running *Row Constructors* sample");
+            sw.Restart();
+            RowConstructorsSample(customers);
+            sw.Stop();
+            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
+            Console.WriteLine();
+            //Console.ReadKey();
+
             Console.WriteLine("Running *BulkCopy* sample");
             sw.Restart();
             BulkCopySample(customers);
@@ -103,10 +117,12 @@ namespace AzureSQL.DevelopmentBestPractices
             {
                 conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
+                conn.Open();
                 foreach (var c in customers)
                 {
                     conn.Execute("dbo.InsertNetworkLatencyTestCustomers_Basic", c, commandType: CommandType.StoredProcedure);
                 }
+                conn.Close();
             }
         }
 
@@ -144,6 +160,28 @@ namespace AzureSQL.DevelopmentBestPractices
             }
         }
 
+        void RowConstructorsSample(List<Customer> customers)
+        {            
+            int s = 0;
+            int b = 1000;
+            if (b > customers.Count) b = customers.Count;
+
+            while (s < customers.Count)
+            {
+                var payload = customers.GetRange(s, b).Select(c => { return $"({c.CustomerID}, '{c.Title.EscapeQuote()}', '{c.FirstName.EscapeQuote()}', '{c.LastName.EscapeQuote()}', '{c.MiddleName.EscapeQuote()}', '{c.CompanyName.EscapeQuote()}', '{c.SalesPerson.EscapeQuote()}', '{c.EmailAddress.EscapeQuote()}', '{c.Phone.EscapeQuote()}', '{c.ModifiedDate.ToString("o")}')";});
+
+                using (var conn = new SqlConnection(_connectionString))
+                {
+                    conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
+
+                    conn.Execute($"INSERT INTO [dbo].[NetworkLatencyTestCustomers] ([CustomerID], [Title], [FirstName], [LastName], [MiddleName], [CompanyName], [SalesPerson], [EmailAddress], [Phone], [ModifiedDate]) VALUES {string.Join(',', payload)}", commandType: CommandType.Text);
+                }
+
+                s += b;
+                if ((s + b) > customers.Count) b = customers.Count - s;
+            }
+        }
+
         void BulkCopySample(List<Customer> customers)
         {
             var ct = CustomersToDataTable(customers);
@@ -165,14 +203,14 @@ namespace AzureSQL.DevelopmentBestPractices
         {
             var userFaker = new Faker<Customer>()
                 .RuleFor(c => c.CustomerID, f => f.IndexFaker)
-                .RuleFor(c => c.Title, f => f.Name.Prefix(f.Person.Gender))
-                .RuleFor(c => c.FirstName, f => f.Name.FirstName())
-                .RuleFor(c => c.LastName, f => f.Name.LastName())
-                .RuleFor(c => c.MiddleName, f => f.Name.FirstName())
-                .RuleFor(c => c.CompanyName, f => f.Company.CompanyName())
-                .RuleFor(c => c.SalesPerson, f => f.Name.FullName())
-                .RuleFor(c => c.Phone, f => f.Person.Phone)
-                .RuleFor(c => c.EmailAddress, (f, u) => f.Internet.Email(u.FirstName, u.LastName))
+                .RuleFor(c => c.Title, f => f.Name.Prefix(f.Person.Gender).SetMaxLength(200))
+                .RuleFor(c => c.FirstName, f => f.Name.FirstName().SetMaxLength(200))
+                .RuleFor(c => c.LastName, f => f.Name.LastName().SetMaxLength(200))
+                .RuleFor(c => c.MiddleName, f => f.Name.FirstName().SetMaxLength(200))
+                .RuleFor(c => c.CompanyName, f => f.Company.CompanyName().SetMaxLength(200))
+                .RuleFor(c => c.SalesPerson, f => f.Name.FullName().SetMaxLength(200))
+                .RuleFor(c => c.Phone, f => f.Person.Phone.SetMaxLength(20))
+                .RuleFor(c => c.EmailAddress, (f, u) => f.Internet.Email(u.FirstName, u.LastName).SetMaxLength(1024))
                 .RuleFor(c => c.ModifiedDate, f => f.Date.Recent(100));
 
             var result = userFaker.Generate(CUSTOMERS_COUNT);
