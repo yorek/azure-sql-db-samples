@@ -12,6 +12,19 @@ In this samples several techniques to send a set of data are compared agains a c
 
 Make sure you have an empty database in Azure SQL and then create the needed database objects, by using the script in the `./dotnet/sql` folder. Create the `app.config` file starting from the provided template, and add the connection string for the database you will use in the test. Then, as usual, run `dotnet run` to run the app.
 
-Here's some results after running the samples app in a Azure VM running in the same Azure Region of the target database:
+Here's some results after running the samples app in a Azure VM running in the same Azure Region of the target database, loading 1000 rows to Azure SQL:
 
-TDB
+|Test Type|Elapsed Time|
+|---|---|
+|*Multiple Batches* (*)| 2.947 secs |
+|*Single Batch* (**)|1.669 secs|
+|*TVP*|0.146 secs|
+|*JSON*|0.234 secs|
+|*Row Constructors*|0.39 secs|
+|*BulkCopy*|0.106 secs|
+
+Where:
+
+(*): One INSERT per each row, each one in its own batch
+
+(**): Sending one INSERT per each row but as a single batch

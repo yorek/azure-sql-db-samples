@@ -60,7 +60,7 @@ namespace AzureSQL.DevelopmentBestPractices
 
             var sw = new Stopwatch();
 
-            Console.WriteLine("Running *BASIC* sample");
+            Console.WriteLine("Running *MULTIPLE BATCHES* sample");
             sw.Restart();
             BasicSample(customers);
             sw.Stop();
@@ -68,7 +68,7 @@ namespace AzureSQL.DevelopmentBestPractices
             Console.WriteLine();
             //Console.ReadKey();
 
-            Console.WriteLine("Running *Dapper* sample");
+            Console.WriteLine("Running *SINGLE BATCH* sample");
             sw.Restart();
             DapperSample(customers);
             sw.Stop();
