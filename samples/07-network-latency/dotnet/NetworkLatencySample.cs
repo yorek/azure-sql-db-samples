@@ -236,14 +236,14 @@ namespace AzureSQL.DevelopmentBestPractices
             {
                 ct.Rows.Add(
                     c.CustomerID,
-                    c.Title.SetMaxLength(200),
-                    c.FirstName.SetMaxLength(200),
-                    c.LastName.SetMaxLength(200),
-                    c.MiddleName.SetMaxLength(200),
-                    c.CompanyName.SetMaxLength(200),
-                    c.SalesPerson.SetMaxLength(200),
-                    c.EmailAddress.SetMaxLength(1024),
-                    c.Phone.SetMaxLength(20),
+                    c.Title,
+                    c.FirstName,
+                    c.LastName,
+                    c.MiddleName,
+                    c.CompanyName,
+                    c.SalesPerson,
+                    c.EmailAddress,
+                    c.Phone,
                     c.ModifiedDate
                     );
             }
