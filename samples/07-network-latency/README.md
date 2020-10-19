@@ -14,14 +14,25 @@ Make sure you have an empty database in Azure SQL and then create the needed dat
 
 Here's some results after running the samples app in a Azure VM running in the same Azure Region of the target database, loading 1000 rows to Azure SQL:
 
-|Test Type|Elapsed Time|
-|---|---|
-|*Multiple Batches* (*)| 2.947 secs |
-|*Single Batch* (**)|1.669 secs|
-|*TVP*|0.146 secs|
-|*JSON*|0.234 secs|
-|*Row Constructors*|0.39 secs|
-|*BulkCopy*|0.106 secs|
+|Test Type|Elapsed Time|Rows/Sec|
+|---|---|---|
+|*Multiple Batches* (*)| 2.158 secs | 463 rows/sec |
+|*Single Batch* (**)|1.649 secs| 606 rows/sec |
+|*TVP*|0.071 secs| 14084 rows/sec | 
+|*JSON*|0.179 secs| 6060 rows/sec |
+|*Row Constructors*|0.376 secs| 2659 rows/sec |
+|*BulkCopy*|0.071 secs| 14084 rows/sec |
+
+And when loading 10000 rows:
+
+|Test Type|Elapsed Time|Rows/Sec|
+|---|---|---|
+|*Multiple Batches* (*)| 17.56 secs | 569 rows/sec |
+|*Single Batch* (**)| 16.51 secs| 605 rows/sec |
+|*TVP*|0.275 secs| 36363 rows/sec | 
+|*JSON*|0.65 secs| 15384 rows/sec |
+|*Row Constructors*|3.734 secs| 2677 rows/sec |
+|*BulkCopy*|0.197 secs| 50761 rows/sec |
 
 Where:
 
