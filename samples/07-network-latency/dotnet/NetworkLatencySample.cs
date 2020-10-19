@@ -60,53 +60,26 @@ namespace AzureSQL.DevelopmentBestPractices
 
             var sw = new Stopwatch();
 
-            Console.WriteLine("Running *MULTIPLE BATCHES* sample");
-            sw.Restart();
-            BasicSample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            Action<Action<List<Customer>>, string> RunTest = (Test, message) => {
+                Console.WriteLine(message);
+                sw.Restart();
+                Test(customers);
+                sw.Stop();
+                Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
+                Console.WriteLine();
+            };
 
-            Console.WriteLine("Running *SINGLE BATCH* sample");
-            sw.Restart();
-            DapperSample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            RunTest(BasicSample, "Running *MULTIPLE BATCHES* sample");
 
-            Console.WriteLine("Running *TVP* sample");
-            sw.Restart();
-            TVPSample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            RunTest(DapperSample, "Running *SINGLE BATCH* sample");
 
-            Console.WriteLine("Running *JSON* sample");
-            sw.Restart();
-            JsonSample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            RunTest(TVPSample, "Running *TVP* sample");
 
-            Console.WriteLine("Running *Row Constructors* sample");
-            sw.Restart();
-            RowConstructorsSample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            RunTest(JsonSample, "Running *JSON* sample");
 
-            Console.WriteLine("Running *BulkCopy* sample");
-            sw.Restart();
-            BulkCopySample(customers);
-            sw.Stop();
-            Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
-            Console.WriteLine();
-            //Console.ReadKey();
+            RunTest(RowConstructorsSample, "Running *Row Constructors* sample");
+
+            RunTest(BulkCopySample, "Running *BulkCopy* sample");
 
             Console.WriteLine("Done.");
         }
