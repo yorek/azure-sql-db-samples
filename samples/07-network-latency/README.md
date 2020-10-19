@@ -12,7 +12,7 @@ In this samples several techniques to send a set of data are compared agains a c
 
 Make sure you have an empty database in Azure SQL and then create the needed database objects, by using the script in the `./dotnet/sql` folder. Create the `app.config` file starting from the provided template, and add the connection string for the database you will use in the test. Then, as usual, run `dotnet run` to run the app.
 
-Here's some results after running the samples app in a Azure VM running in the same Azure Region of the target database, loading 1000 rows to Azure SQL:
+Here's some results after running the samples app in a Azure VM running in the same Azure Region of the target database, loading 1000 rows to Azure SQL using BC_Gen5_2 service objective:
 
 |Test Type|Elapsed Time|Rows/Sec|
 |---|---|---|
