@@ -34,6 +34,17 @@ And when loading 10000 rows:
 |*Row Constructors*|3.734 secs| 2677 rows/sec |
 |*BulkCopy*|0.197 secs| 50761 rows/sec |
 
+And if you are running test from On-Premises instead, performance gap is way bigger (just using 1000 rows):
+
+|Test Type|Elapsed Time|Rows/Sec|
+|---|---|---|
+|*Multiple Batches* (*)| 25.305 secs | 39 rows/sec |
+|*Single Batch* (**)| 24.752 secs| 40 rows/sec |
+|*TVP*|0.96 secs| 1041 rows/sec | 
+|*JSON*|1.554 secs| 643 rows/sec |
+|*Row Constructors*|0.815 secs| 1226 rows/sec |
+|*BulkCopy*|0.43 secs| 2325 rows/sec |
+
 Where:
 
 (*): One INSERT per each row, each one in its own batch
