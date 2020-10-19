@@ -9,6 +9,7 @@
   <ItemGroup>    
     <PackageReference Include="Bogus" Version="30.0.4" />    
     <PackageReference Include="Dapper" Version="2.0.30" />    
+    <PackageReference Include="FastMember" Version="1.5.0" />    
     <PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1" />    
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />

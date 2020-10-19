@@ -9,6 +9,7 @@ using Dapper;
 using Bogus;
 using Newtonsoft.Json;
 using System.Linq;
+using FastMember;
 
 namespace AzureSQL.DevelopmentBestPractices
 {
@@ -159,12 +160,12 @@ namespace AzureSQL.DevelopmentBestPractices
         {
             var ct = CustomersToDataTable(customers);
 
-            using (var conn = new SqlConnection(_connectionString))
+            using(var conn = new SqlConnection(_connectionString))
             {
                 conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
                 conn.Open();
-                using (var bc = new SqlBulkCopy(conn))
+                using(var bc = new SqlBulkCopy(conn))                
                 {
                     bc.DestinationTableName = "dbo.NetworkLatencyTestCustomers";
                     bc.WriteToServer(ct);
@@ -194,33 +195,19 @@ namespace AzureSQL.DevelopmentBestPractices
         public DataTable CustomersToDataTable(List<Customer> customers)
         {
             var ct = new DataTable("CustomerType");
-            ct.Columns.Add("CustomerID", typeof(int));
-            ct.Columns.Add("Title", typeof(string));
-            ct.Columns.Add("FirstName", typeof(string));
-            ct.Columns.Add("LastName", typeof(string));
-            ct.Columns.Add("MiddleName", typeof(string));
-            ct.Columns.Add("CompanyName", typeof(string));
-            ct.Columns.Add("SalesPerson", typeof(string));
-            ct.Columns.Add("EmailAddress", typeof(string));
-            ct.Columns.Add("Phone", typeof(string));
-            ct.Columns.Add("ModifiedDate", typeof(DateTime));
-
-            foreach (var c in customers)
-            {
-                ct.Rows.Add(
-                    c.CustomerID,
-                    c.Title,
-                    c.FirstName,
-                    c.LastName,
-                    c.MiddleName,
-                    c.CompanyName,
-                    c.SalesPerson,
-                    c.EmailAddress,
-                    c.Phone,
-                    c.ModifiedDate
-                    );
-            }
-
+            var r = ObjectReader.Create(customers, 
+                "CustomerID", 
+                "Title", 
+                "FirstName", 
+                "LastName", 
+                "MiddleName", 
+                "CompanyName", 
+                "SalesPerson", 
+                "EmailAddress", 
+                "Phone", 
+                "ModifiedDate"
+            );
+            ct.Load(r);
             return ct;
         }
     }
