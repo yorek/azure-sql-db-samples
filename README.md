@@ -69,6 +69,7 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 If you want to learn more on how to create modern scalable applications with Azure SQL you should read this book:
 
 **Practical Azure SQL Database for Modern Developers**
+
 [![Practical Azure SQL Database for Modern Developers](https://raw.githubusercontent.com/yorek/practical-azure-sql-db-for-modern-developers/master/practical-azure-sql-database-for-modern-developers-small.jpg)](https://www.apress.com/it/book/9781484263693)
 
 that comes loaded with samples too:
