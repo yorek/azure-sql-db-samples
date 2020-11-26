@@ -72,6 +72,4 @@ If you want to learn more on how to create modern scalable applications with Azu
 
 [![Practical Azure SQL Database for Modern Developers](https://raw.githubusercontent.com/yorek/practical-azure-sql-db-for-modern-developers/master/practical-azure-sql-database-for-modern-developers-small.jpg)](https://www.apress.com/it/book/9781484263693)
 
-that comes loaded with samples too:
-
-https://github.com/yorek/practical-azure-sql-db-for-modern-developers
+that comes loaded with samples too: https://github.com/yorek/practical-azure-sql-db-for-modern-developers
