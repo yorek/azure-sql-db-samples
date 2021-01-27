@@ -72,7 +72,7 @@ namespace AzureSQL.DevelopmentBestPractices
 
             RunTest(BasicSample, "Running *MULTIPLE BATCHES* sample");
 
-            RunTest(DapperSample, "Running *SINGLE BATCH* sample");
+            RunTest(DapperSample, "Running *SINGLE-BATCH-LOOKALIKE* sample");
 
             RunTest(TVPSample, "Running *TVP* sample");
 
