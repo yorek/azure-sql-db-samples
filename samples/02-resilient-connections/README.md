@@ -1,4 +1,4 @@
-# 03 - Resilient Connections
+# 02 - Resilient Connections
 
 In the cloud is of paramount importance to make sure your application can deal with transient failures. Implementing a [Retry Pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/retry) should be considered mandatory as in the cloud disconnections can happen at any time, due to resource re-allocation, temporary network issues, or even just bandwidth saturation. 
 

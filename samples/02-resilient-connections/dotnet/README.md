@@ -8,7 +8,7 @@ https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connectivity-is
 
 https://docs.microsoft.com/en-us/sql/connect/ado-net/step-4-connect-resiliently-to-sql-with-ado-net?view=sql-server-ver15 
 
-## Running the sample
+## Running the samples
 
 Make sure you have an Azure SQL DB database to use. Get the connection string using the portal:
 
@@ -26,10 +26,11 @@ and create a new `app.config` using the `app.config.template` as a starting poin
 }
 ```
 
-then make sure you have .NET Core 2.1 installed and run
+then make sure you have .NET Core 3.1 installed and run
 
 ```bash
 dotnet run
 ```
 
-while in `./samples/resilien-connections/net-core` folder.
+while in the `advanced` or `simple` folder.
+

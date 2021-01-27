@@ -64,7 +64,6 @@ namespace AzureSQL.DevelopmentBestPractices
 
                 Console.WriteLine("Hit");
                 Console.WriteLine("[K] to kill the connection.");
-                Console.WriteLine("[F] to force failover.");
                 Console.WriteLine("(a new thread will be spawn to execute the selected action)");
                 
                 var c = string.Empty;
@@ -74,7 +73,6 @@ namespace AzureSQL.DevelopmentBestPractices
             
                 Console.WriteLine("Killing session...");
                 if (c == "k") Task.Run(() => { KillSPID(spid1); }).Wait();             
-                if (c == "f") Task.Run(() => { ManualFailover(); }).Wait();             
                 Console.WriteLine("Session killed...");
                 Console.WriteLine();
 
@@ -115,43 +113,5 @@ namespace AzureSQL.DevelopmentBestPractices
                 conn.Close();
             }    
         }      
-
-        private void ManualFailover() 
-        {
-            string partnerServer = "";
-
-            Console.WriteLine("Finding partner server...");
-            using(var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT partner_server FROM sys.[dm_geo_replication_link_status]";
-
-                partnerServer = cmd.ExecuteScalar().ToString();
-
-                conn.Close();
-            }   
-
-            var csb = new SqlConnectionStringBuilder(_connectionString);
-            csb.DataSource = $"tcp:{partnerServer}.database.windows.net,1433";
-            csb.InitialCatalog = "master";
-            Console.WriteLine($"Partner server is: {csb.DataSource}");            
-
-            Console.WriteLine("Executing Failover...");
-            using(var conn = new SqlConnection(csb.ConnectionString))
-            {
-                conn.Open();
-
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = $"ALTER DATABASE [lab] FAILOVER";
-
-                cmd.ExecuteNonQuery();
-
-                conn.Close();
-            }  
-
-            Console.WriteLine("Done...");
-        }
     }
 }
