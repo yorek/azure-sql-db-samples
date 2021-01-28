@@ -60,7 +60,7 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 6. [Key-Value Store](./samples/06-key-value): How to implement a Key-Value store with In-Memory tables
 7. [Network Latency](./samples/07-network-latency): How to minimize the impact of network latency with using Azure SQL
 8. [Read Committed Snapshot](./samples/08-read-committed-snapshot): Work In Progress
-9. [External Data Access](./samples/09-external-data): Work In Progress
+9. [External Data Access](./samples/09-external-data): Importing or using external data with Azure SQL
 10. [Partitioning](./samples/10-partitioning): Work In Progress
 11. [Updates and Deletes](./samples/11-updates-and-deletes): Work In Progress
 
