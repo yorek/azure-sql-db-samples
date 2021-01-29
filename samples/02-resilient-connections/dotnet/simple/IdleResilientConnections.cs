@@ -101,7 +101,10 @@ namespace AzureSQL.DevelopmentBestPractices
 
         private void KillSPID(int spid)
         {
-            using(var conn = new SqlConnection(_connectionString))
+            var sb = new SqlConnectionStringBuilder(_connectionString);
+            sb.ApplicationName = "ConnectionKiller";
+
+            using(var conn = new SqlConnection(sb.ToString()))
             {
                 conn.Open();
 
