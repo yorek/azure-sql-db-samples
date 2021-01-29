@@ -35,6 +35,7 @@ namespace AzureSQL.DevelopmentBestPractices
         private readonly List<int> _transientErrors = new List<int>() {
                 0, 
                 53, 
+                64,
                 121, 
                 258, 
                 4060, 
