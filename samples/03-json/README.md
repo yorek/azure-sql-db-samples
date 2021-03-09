@@ -17,7 +17,6 @@ If you're new to Jupyter Notebooks, please read the repo [README](../README.md) 
 The aforementioned samples needs some tables and data to be used, so make sure you setup the environment by executing the script `00-setup-samples.sql` in the database of your choice. If you are new to the platform and need help on creating a new database, please refer again to the [README](../README.md) in the root folder.
 
 The `sample.json` file is not used in the sample, but it is useful to take a look at the kind of JSON document the samples will be working on.
-
 ## Taking advantage of JSON for developing modern applications
 
 JSON can really make the exchange of data between applications and database really easy and flexible. The following link give you additional resources that you can use to learn how to take advantage of JSON support in Azure SQL:

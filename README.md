@@ -7,11 +7,10 @@ products:
 - azure
 - azure-sql-database
 description: "Azure SQL DB Samples and Best Practices"
-urlFragment: "azure-sql-db-samples"
+urlFragment: azure-sql-db-samples
 ---
 
 # Azure SQL DB Samples and Best Practices
-
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 <!-- 
@@ -22,7 +21,7 @@ Guidance on onboarding samples to docs.microsoft.com/samples: https://review.doc
 Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
 -->
 
-Samples and Best practices to use Azure SQL DB to build modern, mission critical application, with ease and confidence
+Samples and Best practices to use Azure SQL DB to build modern, mission critical applications, with ease and confidence.
 
 ## Running the samples
 
@@ -34,7 +33,7 @@ To create a new database, follow the instructions here:
 
 [Create Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal)
 
-or, if you're already comfortable with [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli), you can just execute (using Bash, via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), a Linux environment or [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview))
+or, if you're already comfortable with [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli), you can just execute (using [Powershell or Command Prompt](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows), Bash, via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), a Linux environment or [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview))
 
 ```bash
 az group create -n <my-resource-group> -l WestUS2
@@ -49,7 +48,6 @@ Once the database is created, you can connect to it using [Azure Data Studio](ht
 Azure Data Studio supports Jupyter Notebooks. They will be used in some samples. If you never used them before, take a look here:
 
 [Introduction to Azure Data Studio Notebooks](https://www.youtube.com/watch?v=Nt4kIHQ0IOc)
-
 ## Sample Index
 
 1. [Restore Database](./samples/01-restore-database): Restoring a database in Azure SQL
@@ -59,11 +57,10 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 5. [GeoSpatial Support](./samples/05-spatial): Working with GeoSpatial data in Azure SQL
 6. [Key-Value Store](./samples/06-key-value): How to implement a Key-Value store with In-Memory tables
 7. [Network Latency](./samples/07-network-latency): How to minimize the impact of network latency with using Azure SQL
-8. [Read Committed Snapshot](./samples/08-read-committed-snapshot): Work In Progress
+8. [Read Committed Snapshot](./samples/08-read-committed-snapshot): With Azure SQL default isolation level writers will not block readers
 9. [External Data Access](./samples/09-external-data): Importing or using external data with Azure SQL
 10. [Partitioning](./samples/10-partitioning): Work In Progress
 11. [Updates and Deletes](./samples/11-updates-and-deletes): Work In Progress
-
 ## Learn More
 
 If you want to learn more on how to create modern scalable applications with Azure SQL you should read this book:
