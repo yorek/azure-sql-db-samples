@@ -119,7 +119,7 @@ namespace AzureSQL.DevelopmentBestPractices
             
             var query = $@"
                 BEGIN TRAN; 
-                    INSERT INTO dbo.TestResiliency (ThreadId) VALUES ({options.SampleId}); 
+                    INSERT INTO dbo.TestResiliency DEFAULT VALUES; 
                     {waitFor}
                 COMMIT TRAN; 
                 SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";

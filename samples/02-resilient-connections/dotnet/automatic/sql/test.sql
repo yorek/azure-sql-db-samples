@@ -21,5 +21,5 @@ FROM
 WHERE
 	[cte].[CurrentSLO] != [cte].[PrevSLO]
 ORDER BY 
-	Id DESC
+	Id
 ;
