@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[timesheet]
 	[reported_on] [date] NOT NULL,
 	[hours_worked] [int] NOT NULL
 )
-CREATE CLUSTERED INDEX [ixc] ON [dbo].[timesheet] ([project] ASC, [reported_on] ASC)
+CREATE CLUSTERED INDEX [ixc] ON [dbo].[timesheet] ([reported_on] ASC, [project] ASC)
 ALTER TABLE [dbo].[timesheet] ADD CONSTRAINT [pk__timesheet] PRIMARY KEY NONCLUSTERED ( [id] ASC )
 
 /*
