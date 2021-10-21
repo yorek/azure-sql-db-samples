@@ -51,16 +51,29 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 ## Sample Index
 
 1. [Restore Database](./samples/01-restore-database): Restoring a database in Azure SQL
-2. [Resilient Connections](./samples/02-resilient-connections): How to create resilient solutions with Azure SQL
-3. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
-4. [Graph Models](./samples/04-graph): Graph model sample and references
-5. [GeoSpatial Support](./samples/05-spatial): Working with GeoSpatial data in Azure SQL
-6. [Key-Value Store](./samples/06-key-value): How to implement a Key-Value store with In-Memory tables
-7. [Network Latency](./samples/07-network-latency): How to minimize the impact of network latency with using Azure SQL
-8. [Read Committed Snapshot](./samples/08-read-committed-snapshot): With Azure SQL default isolation level writers will not block readers
-9. [External Data Access](./samples/09-external-data): Importing or using external data with Azure SQL
-10. [Partitioning](./samples/10-partitioning): Work In Progress
-11. [Updates and Deletes](./samples/11-updates-and-deletes): Work In Progress
+1. [Resilient Connections](./samples/02-resilient-connections): How to create resilient solutions with Azure SQL
+1. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
+1. [Graph Models](./samples/04-graph): Graph model sample and references
+1. [GeoSpatial Support](./samples/05-spatial): Working with GeoSpatial data in Azure SQL
+1. [Key-Value Store](./samples/06-key-value): How to implement a Key-Value store with In-Memory tables
+1. [Network Latency](./samples/07-network-latency): How to minimize the impact of network latency with using Azure SQL
+1. [Read Committed Snapshot](./samples/08-read-committed-snapshot): With Azure SQL default isolation level writers will not block readers
+1. [External Data Access](./samples/09-external-data): Importing or using external data with Azure SQL
+1. [Partitioning](./samples/10-partitioning): Work In Progress
+1. [Updates and Deletes](./samples/11-updates-and-deletes): Work In Progress
+1. [Temporal Tables](./samples/12-temporal-tables): Work In Progress
+1. [Change Tracking](./samples/13-change-tracking): Work In Progress
+1. [Change Data Capture](./samples/14-change-tracking): Work In Progress
+1. [Columnstore](./samples/15-columnstore): Work In Progress
+1. [Data Masking](./samples/16-data-masking): Work In Progress
+1. [Ledger Tables](./samples/17-ledger-tables): Work In Progress
+1. [Row Level Security](./samples/18-row-level-security): Work In Progress
+1. [Grouping Sets](./samples/19-grouping-sets): Work In Progress
+1. [Windowing Functions](./samples/20-windowing-functions): Work In Progress
+1. [Views](./samples/21-views): Work In Progress
+1. [Stored Procedures](./samples/22-stored-procedures): Work In Progress
+1. [User Defined Functions](./samples/23-user-defined-functions): Work In Progress
+
 ## Learn More
 
 If you want to learn more on how to create modern scalable applications with Azure SQL you should read this book:
