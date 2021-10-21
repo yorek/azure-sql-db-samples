@@ -10,7 +10,7 @@ The sample available in the [Jupyter Notebook](./graph.ipynb) is the same availa
 
 For a more realistic sample, use the MillionSong dataset sample:
 
-https://github.com/arvindshmicrosoft/MillionSongDatasetinSQLServer 
+https://github.com/Azure-Samples/millionsongdataset-sql
 
 Make sure also to take a look at this Case Study, that highlights how Azure SQL Graph support + ColumnStore can offer better performance that NoSQL databases:
 

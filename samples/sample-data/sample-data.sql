@@ -10,10 +10,12 @@ CREATE TABLE [dbo].[timesheet]
 	[birthday] [date] NOT NULL,
 	[project] [nvarchar](50) NOT NULL,
 	[reported_on] [date] NOT NULL,
+	[reported_year] AS year(reported_on) PERSISTED, 
 	[hours_worked] [int] NOT NULL
-)
-CREATE CLUSTERED INDEX [ixc] ON [dbo].[timesheet] ([reported_on] ASC, [project] ASC)
-ALTER TABLE [dbo].[timesheet] ADD CONSTRAINT [pk__timesheet] PRIMARY KEY NONCLUSTERED ( [id] ASC )
+);
+CREATE CLUSTERED INDEX [ixc] ON [dbo].[timesheet] (project, reported_on);
+ALTER TABLE [dbo].[timesheet] ADD CONSTRAINT [pk__timesheet] PRIMARY KEY NONCLUSTERED (id);
+GO
 
 /*
 Data

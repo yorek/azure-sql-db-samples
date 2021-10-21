@@ -46,7 +46,7 @@ from sys.tables
 where temporal_type = 1;
 
 -- if needed we can actually query the history table
-select * from [dbo].[MSSQL_TemporalHistoryFor_1213247377]
+select * from [dbo].[MSSQL_TemporalHistoryFor_98099390]
 
 -- using "for system time" makes it ever easier
 select *, valid_from, valid_to from dbo.OrderInfo for system_time all order by id, valid_from

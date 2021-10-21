@@ -7,7 +7,9 @@ select top(10) * from dbo.timesheet
     Return data for a dashboard
 */
 select 
-    project, month(reported_on) as [year], sum(hours_worked) 
+    project, 
+    month(reported_on) as [year], 
+    sum(hours_worked) as hours_worked
 from 
     dbo.timesheet
 where

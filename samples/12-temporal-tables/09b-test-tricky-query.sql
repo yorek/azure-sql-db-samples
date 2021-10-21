@@ -4,7 +4,7 @@ go
 select * from dbo.[Address] for system_time all
 go
 
-create view dbo.DenormalizedTemporalView
+create or alter view dbo.DenormalizedTemporalView
 as
 select
 	a.customer_id,
@@ -17,8 +17,7 @@ select
 from
 	dbo.[Address] a
 full join
-	dbo.[Phone] p on a.customer_id = p.customer_id
-;
+	dbo.[Phone] p on a.customer_id = p.customer_id;
 go
 
 WITH TimeStamps AS
@@ -85,6 +84,25 @@ FROM
 PIVOT(MAX(val) FOR attr IN(phone, address)) AS P;
 go
 
-select * from dbo.DenormalizedTemporalView for system_time as of '2007-12-01'
+select customer_id, [address], phone 
+from dbo.DenormalizedTemporalView for system_time as of '2007-12-02'
+go
 
-select * from dbo.DenormalizedTemporalView for system_time between '2007-12-01 00:00:00.0000000' and '2007-12-19 00:00:00.0000000'
+select customer_id, [address], phone 
+from dbo.DenormalizedTemporalView for system_time as of '2007-12-20'
+go
+
+select customer_id, [address], phone 
+from dbo.DenormalizedTemporalView for system_time as of '2008-01-05'
+go
+
+select customer_id, [address], phone 
+from dbo.DenormalizedTemporalView for system_time as of '2021-10-20'
+go
+
+
+
+
+
+
+

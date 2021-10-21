@@ -15,14 +15,15 @@ with (system_versioning = on (history_table = dbo.OrderInfoHistory))
 go
 
 -- what if we're into a transaction?
-begin tran;
 print  sysutcdatetime();
-waitfor delay '00:00:03';
-insert into dbo.OrderInfo values  (100, 'Order 1', 300, sysutcdatetime(), 'new', 'DM');
-insert into dbo.OrderInfo values  (200, 'Order 2', 300, sysutcdatetime(), 'new', 'DM');
-waitfor delay '00:00:03'
-insert into dbo.OrderInfo values  (300, 'Order 3', 300, sysutcdatetime(), 'new', 'DM');
+begin tran;
+	waitfor delay '00:00:03';
+	insert into dbo.OrderInfo values  (100, 'Order 1', 300, sysutcdatetime(), 'new', 'DM');
+	insert into dbo.OrderInfo values  (200, 'Order 2', 300, sysutcdatetime(), 'new', 'DM');
+	waitfor delay '00:00:03'
+	insert into dbo.OrderInfo values  (300, 'Order 3', 300, sysutcdatetime(), 'new', 'DM');
 commit tran
+print  sysutcdatetime();
 go
 
 select *, valid_from, valid_to from dbo.OrderInfo
@@ -33,8 +34,8 @@ delete from dbo.OrderInfo
 go
 
 -- and what about nested transactions?
-begin tran;
 print  sysutcdatetime();
+begin tran;
 waitfor delay '00:00:03';
 insert into dbo.OrderInfo values  (100, 'Order 100', 300, sysutcdatetime(), 'new', 'DM');
 insert into dbo.OrderInfo values  (200, 'Order 200', 300, sysutcdatetime(), 'new', 'DM');
