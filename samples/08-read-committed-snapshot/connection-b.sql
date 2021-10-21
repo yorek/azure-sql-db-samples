@@ -3,11 +3,20 @@
 */
 
 -- Default in Azure
-SELECT * FROM [Application].[Cities] 
-WHERE CityName IN ('Kirkland', 'Redmond', 'Bellevue')
+-- alter database WideWorldImporters set read_committed_snapshot on
+
+-- Not blocked
+select * from dbo.sample_cities  
+where CityName IN ('Kirkland', 'Redmond', 'Bellevue')
+
+select CityName, count(*) as [Rows]
+from dbo.sample_cities 
+where CityName in ('Redmond', 'Bellevue', 'Kirkland')
+group by CityName
 
 -- Uncomment the following lines to force Azure SQL to use locks to preserve consistency and isolate transactions. 
--- SELECT * FROM [Application].[Cities] WITH (READCOMMITTEDLOCK)
--- WHERE CityName IN ('Kirkland', 'Redmond', 'Bellevue')
+select * from dbo.sample_cities with (readcommittedlock)
+where CityName IN ('Kirkland', 'Redmond', 'Bellevue')
 
-SELECT @@TRANCOUNT
+
+
