@@ -2,6 +2,7 @@
     Take a look at the source data
 */
 select top(10) * from dbo.timesheet
+go
 
 /*
     Return data for a dashboard
@@ -20,6 +21,7 @@ group by
         (project),
         (month(reported_on))       
     )
+go
 
 /*
     Return data for a matrix report
@@ -43,6 +45,7 @@ group by
 order by 
     [project],
     [month]
+go
 
 /*
     Return data for a matrix report in a pivoted format
@@ -72,3 +75,4 @@ from
     reportData
 pivot
     ( sum(hours_worked) for [month] in ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]) ) as p
+go
