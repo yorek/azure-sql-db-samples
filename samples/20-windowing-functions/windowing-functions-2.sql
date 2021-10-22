@@ -35,7 +35,7 @@ with timesheetWithTotal as
 )
 select
     *,
-    100 * (cast(hours_worked as decimal) / SUM(hours_worked) over (partition by project)) as contribution_perc
+    100 * (cast(hours_worked as decimal) / total_project_hours) as contribution_perc
 from
     timesheetWithTotal
 go
@@ -56,7 +56,7 @@ timesheetWithPercentage as
 (
     select
         *,
-        100 * (cast(hours_worked as decimal) / SUM(hours_worked) over (partition by project)) as contribution_perc
+        100 * (cast(hours_worked as decimal) / total_project_hours) as contribution_perc
     from
         timesheetWithTotal
 )
@@ -82,7 +82,7 @@ timesheetWithPercentage as
 (
     select
         *,
-        100 * (cast(hours_worked as decimal) / SUM(hours_worked) over (partition by project)) as contribution_perc
+        100 * (cast(hours_worked as decimal) / total_project_hours) as contribution_perc
     from
         timesheetWithTotal
 ),
@@ -94,5 +94,5 @@ timesheetWithRank as
     from
         timesheetWithPercentage
 )
-select * from timesheetWithRank where contribution_rank <= 10 --and project = 'Alpha'
+select * from timesheetWithRank where contribution_rank <= 10 -- and project = 'Alpha'
 go
