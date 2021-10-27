@@ -1,3 +1,8 @@
+alter table dbo.OrderInfo set ( system_versioning = off );
+drop table if exists dbo.OrderInfoHistory;
+drop table if exists dbo.OrderInfo;
+go
+
 create table dbo.OrderInfo
 (
 	id int not null primary key,
