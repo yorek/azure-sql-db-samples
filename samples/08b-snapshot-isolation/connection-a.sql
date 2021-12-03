@@ -13,6 +13,10 @@ where CityName in ('Redmond', 'Bellevue', 'Kirkland')
 group by CityName
 go
 
+select * from dbo.sample_cities
+where CityName in ('Redmond', 'Bellevue', 'Kirkland')
+go
+
 begin tran
     insert into dbo.sample_cities  
         (CityID, CityName, StateProvinceID, LastEditedBy)
