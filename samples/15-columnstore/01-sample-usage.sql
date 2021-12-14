@@ -1,10 +1,16 @@
-select top(100) * from dbo.LINEITEM_RS
+select databasepropertyex(db_name(), 'ServiceObjective')
+go
+
+select top(100) * from dbo.LINEITEM
+go
 
 -- Rowstore index
 select format(count(*),'n0') from dbo.LINEITEM_RS
+go
 
 -- Columnstore index
 select format(count(*),'n0') from dbo.LINEITEM_CS
+go
 
 -- Try to run the following aggregation query with
 -- No Index 
@@ -14,7 +20,7 @@ select
     [L_ORDERKEY],
     sum(L_QUANTITY) as ORDER_QUANTITY
 from
-    dbo.LINEITEM_CS
+    dbo.LINEITEM_RS
 group by
     [L_ORDERKEY]
 having

@@ -1,3 +1,6 @@
+select databasepropertyex(db_name(), 'ServiceObjective')
+go
+
 with cte as
 (
     select
