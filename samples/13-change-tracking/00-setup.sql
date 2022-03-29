@@ -1,11 +1,22 @@
+/* 
+    Enable Change Tracking if not enabled yet
+*/
 if not exists(select * from sys.change_tracking_databases where database_id = db_id())
 begin
-    alter database AzureFriday 
-    set change_tracking = on
-    (change_retention = 30 days, auto_cleanup = on)
+    alter database ct_sample set 
+        change_tracking = on (change_retention = 30 days, auto_cleanup = on)
 end
 go
 
+/*
+    Check that Change Tracking has been enabled
+*/
+select * from sys.change_tracking_databases
+go
+
+/* 
+    Create a table
+*/
 drop table if exists dbo.TrainingSession;
 create table dbo.TrainingSession
 (
@@ -22,6 +33,9 @@ create table dbo.TrainingSession
 );
 go
 
+/*
+    Insert some initial values
+*/
 insert into dbo.TrainingSession 
     (Id, RecordedOn, [Type], Steps, Distance, Duration, Calories)
 values 
@@ -29,6 +43,21 @@ values
     (2, '20211017 17:54:48 -08:00', 'Run', 0, 4981, 32*60+37, 480)
 go
 
-alter table dbo.TrainingSession
-enable change_tracking
+/*
+    Now enable Change Tracking *on the table*
+*/
+alter table dbo.TrainingSession enable change_tracking
 go
+
+/*
+    Verify that Change Tracking has been enabled
+*/
+select 
+    quotename(object_schema_name([object_id])) + N'.' + quotename(object_name([object_id])) as table_name, 
+    * 
+from
+    sys.change_tracking_tables
+
+
+
+
