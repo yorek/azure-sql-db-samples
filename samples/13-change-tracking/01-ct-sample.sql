@@ -48,14 +48,14 @@ go
 /* 
     Return the changes from the requested version
 */
-declare @fromVersion int = 0;
+declare @fromVersion int = 78;
 select
 	sys_change_version, sys_change_operation, Id
 from
 	changetable(changes dbo.TrainingSessions, @fromVersion) C
 go
 
-declare @fromVersion int = 0;
+declare @fromVersion int = 78;
 select
 	sys_change_version, sys_change_operation, 
     t.*
@@ -68,6 +68,9 @@ go
 /*
     Add couple of more rows
 */
+begin tran
+go
+
 insert into dbo.TrainingSessions 
     (Id, RecordedOn, [Type], Steps, Distance, Duration, Calories)
 values 
@@ -81,12 +84,26 @@ where Id = 5
 go
 
 /*
+    Update Session Id 5 again
+*/
+update dbo.TrainingSessions 
+set Calories = 563
+where Id = 5
+go
+
+commit tran
+go
+
+select @@trancount
+go
+
+/*
     Get the current version
 */
 select change_tracking_current_version()
 go
 
-declare @fromVersion int = 70;
+declare @fromVersion int = 82;
 select
 	sys_change_version, sys_change_operation, 
     t.*

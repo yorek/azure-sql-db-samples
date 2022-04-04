@@ -1,10 +1,13 @@
+/*
+    Using sample "ct_sample" database (just an empty database)
+*/
+
 /* 
     Enable Change Tracking if not enabled yet
 */
 if not exists(select * from sys.change_tracking_databases where database_id = db_id())
 begin
-    alter database ct_sample set 
-        change_tracking = on (change_retention = 30 days, auto_cleanup = on)
+    alter database ct_sample set change_tracking = on (change_retention = 30 days, auto_cleanup = on)
 end
 go
 
@@ -17,8 +20,8 @@ go
 /* 
     Create a table
 */
-drop table if exists dbo.TrainingSession;
-create table dbo.TrainingSession
+drop table if exists dbo.TrainingSessions;
+create table dbo.TrainingSessions
 (
     [Id] int primary key not null,
     [RecordedOn] datetimeoffset not null,
@@ -36,7 +39,7 @@ go
 /*
     Insert some initial values
 */
-insert into dbo.TrainingSession 
+insert into dbo.TrainingSessions 
     (Id, RecordedOn, [Type], Steps, Distance, Duration, Calories)
 values 
     (1, '20211018 17:27:23 -08:00', 'Run', 3784, 5123, 32*60+3, 526),
@@ -46,7 +49,7 @@ go
 /*
     Now enable Change Tracking *on the table*
 */
-alter table dbo.TrainingSession enable change_tracking
+alter table dbo.TrainingSessions enable change_tracking
 go
 
 /*

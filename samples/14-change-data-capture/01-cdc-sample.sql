@@ -1,13 +1,10 @@
--- create test table
-drop table if exists dbo.sql_server_versions;
-create table dbo.sql_server_versions
-(
-	id int identity not null primary key nonclustered,
-	sql_server_version varchar(10) not null unique,
-	sql_server_codenames varchar(50) null
-)
-go
-create clustered index ixc on dbo.sql_server_versions(sql_server_version)
+/*
+    Using sample "cdc_test" database (just an empty database)
+*/
+
+-- start from an empty table
+truncate table dbo.sql_server_versions;
+select * from dbo.sql_server_versions;
 go
 
 -- insert some initial values
@@ -176,6 +173,10 @@ alter table dbo.[sql_server_versions]
 add release_year int null
 go
 
+create clustered index ixc on dbo.[sql_server_versions] (release_year)
+go
+
+-- Add values for new column
 update 
 	t
 set
