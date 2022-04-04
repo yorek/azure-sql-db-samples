@@ -8,7 +8,7 @@ Console.WriteLine("Setting up...");
 
 string azureConnectionString = DotNetEnv.Env.GetString("AZURE_CONNECTION_STRING");
 if (string.IsNullOrEmpty(azureConnectionString)) {
-    Console.WriteLine("Enviroment variable AZURE_CONNECTION_STRING not found.");
+    Console.WriteLine("Environment variable AZURE_CONNECTION_STRING not found.");
     return;
 }
 

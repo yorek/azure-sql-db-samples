@@ -18,12 +18,23 @@ select * from sys.change_tracking_databases
 go
 
 /* 
+    Create sequence
+*/
+if not exists(select * from sys.sequences where [name] = 'Ids')
+begin
+    create sequence dbo.Ids
+    as int
+    start with 1000;
+end
+go
+
+/* 
     Create a table
 */
 drop table if exists dbo.TrainingSessions;
 create table dbo.TrainingSessions
 (
-    [Id] int primary key not null,
+    [Id] int primary key not null default(next value for dbo.Ids),
     [RecordedOn] datetimeoffset not null,
     [Type] varchar(50) not null,
     [Steps] int not null,

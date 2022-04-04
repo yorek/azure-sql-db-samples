@@ -62,8 +62,8 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 1. [Partitioning](./samples/10-partitioning): Work In Progress
 1. [Updates and Deletes](./samples/11-updates-and-deletes): Work In Progress
 1. [Temporal Tables](./samples/12-temporal-tables): Work In Progress
-1. [Change Tracking](./samples/13-change-tracking): Work In Progress
-1. [Change Data Capture](./samples/14-change-tracking): Work In Progress
+1. [Change Tracking](./samples/13-change-tracking): Using Change Tracking to detected changed rows
+1. [Change Data Capture](./samples/14-change-tracking): Using Change Data Capture to detected changed data
 1. [Columnstore](./samples/15-columnstore): Work In Progress
 1. [Data Masking](./samples/16-data-masking): Work In Progress
 1. [Ledger Tables](./samples/17-ledger-tables): Work In Progress
