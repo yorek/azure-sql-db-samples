@@ -33,6 +33,9 @@ go
 exec sys.sp_cdc_enable_db;
 go
 
+-- CDC-related system objects
+select * from sys.objects where schema_id = schema_id('cdc')
+
 -- enable cdc on target table
 exec sys.sp_cdc_enable_table
 		@source_schema = 'dbo',
@@ -41,9 +44,15 @@ exec sys.sp_cdc_enable_table
 		@supports_net_changes = 1; -- all generate "get_net_changes' procedure'
 go
 
+-- CDC newly created system objects
+select * from sys.objects where schema_id = schema_id('cdc') and [name] like '%sql[_]server[_]versions%'
+
 -- verify that cdc is enabled on table
 select is_tracked_by_cdc from sys.[tables] as t where t.[name] = 'sql_server_versions'
 go
+
+-- list all tables on which CDC has been enabled
+exec sys.sp_cdc_help_change_data_capture
 
 -- note that no changes has been made to the table
 select * from dbo.[sql_server_versions] as ssv
@@ -65,6 +74,10 @@ update dbo.sql_server_versions set sql_server_codenames = 'SQL95' where sql_serv
 waitfor delay '00:00:03'; -- wait some seconds
 commit
 go
+
+-- Get some internal CDC info on transaction log scan
+select * from sys.dm_cdc_log_scan_sessions
+select * from sys.dm_cdc_errors
 
 -- Update value
 update dbo.sql_server_versions set sql_server_codenames = 'Test' where sql_server_version = '5.0';
@@ -91,6 +104,10 @@ go
 -- note that no changes has been made to the table
 select * from dbo.[sql_server_versions] as ssv
 go
+
+-- Get some internal CDC info on transaction log scan
+select * from sys.dm_cdc_log_scan_sessions
+select * from sys.dm_cdc_errors
 
 -- display all changes (with before and after values) made between the given lsns
 declare @from_lsn binary(10) = sys.[fn_cdc_get_min_lsn]('dbo_sql_server_versions')
@@ -121,6 +138,9 @@ go
 -- Map time to LSNs
 select sys.fn_cdc_map_time_to_lsn('smallest greater than or equal', '2022-04-03 23:47:10.233')
 go
+
+select * from cdc.dbo_sql_server_versions_CT
+
 
 -- display *net* changes 
 declare @from_lsn binary(10) = sys.[fn_cdc_get_min_lsn]('dbo_sql_server_versions')

@@ -22,3 +22,4 @@ create table dbo.sql_server_versions
 	sql_server_codenames varchar(50) null
 )
 go
+
