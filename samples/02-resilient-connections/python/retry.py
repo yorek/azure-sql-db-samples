@@ -14,32 +14,27 @@ logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def is_retriable(value):
+    # Error list created from: 
+    # - https://github.com/dotnet/efcore/blob/main/src/EFCore.SqlServer/Storage/Internal/SqlServerTransientExceptionDetector.cs
+    # - https://docs.microsoft.com/en-us/dotnet/api/microsoft.data.sqlclient.sqlconfigurableretryfactory?view=sqlclient-dotnet-standard-4.1
+    # - https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages
+    # Manually added also
+    # 0, 18456
     RETRY_CODES = [  
-        8001,   
-        42000,       
-        1204,   # The instance of the SQL Server Database Engine cannot obtain a LOCK resource at this time. Rerun your statement when there are fewer active users. Ask the database administrator to check the lock and memory configuration for this instance, or to check for long-running transactions.
-        1205,   # Transaction (Process ID) was deadlocked on resources with another process and has been chosen as the deadlock victim. Rerun the transaction
-        1222,   # Lock request time out period exceeded.
-        49918,  # Cannot process request. Not enough resources to process request.
-        49919,  # Cannot process create or update request. Too many create or update operations in progress for subscription "%ld".
-        49920,  # Cannot process request. Too many operations in progress for subscription "%ld".
-        4060,   # Cannot open database "%.*ls" requested by the login. The login failed.
-        4221,   # Login to read-secondary failed due to long wait on 'HADR_DATABASE_WAIT_FOR_TRANSITION_TO_VERSIONING'. The replica is not available for login because row versions are missing for transactions that were in-flight when the replica was recycled. The issue can be resolved by rolling back or committing the active transactions on the primary replica. Occurrences of this condition can be minimized by avoiding long write transactions on the primary.
-
-        40143,  # The service has encountered an error processing your request. Please try again.
-        40613,  # Database '%.*ls' on server '%.*ls' is not currently available. Please retry the connection later. If the problem persists, contact customer support, and provide them the session tracing ID of '%.*ls'.
-        40501,  # The service is currently busy. Retry the request after 10 seconds. Incident ID: %ls. Code: %d.
-        40540,  # The service has encountered an error processing your request. Please try again.
-        40197,  # The service has encountered an error processing your request. Please try again. Error code %d.
-        10929,  # Resource ID: %d. The %s minimum guarantee is %d, maximum limit is %d and the current usage for the database is %d. However, the server is currently too busy to support requests greater than %d for this database. For more information, see http://go.microsoft.com/fwlink/?LinkId=267637. Otherwise, please try again later.
-        10928,  # Resource ID: %d. The %s limit for the database is %d and has been reached. For more information, see http://go.microsoft.com/fwlink/?LinkId=267637.
-        10060,  # An error has occurred while establishing a connection to the server. When connecting to SQL Server, this failure may be caused by the fact that under the default settings SQL Server does not allow remote connections. (provider: TCP Provider, error: 0 - A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.) (Microsoft SQL Server, Error: 10060)
-        10054,  # The data value for one or more columns overflowed the type used by the provider.
-        10053,  # Could not convert the data value due to reasons other than sign mismatch or overflow.
-        233,    # A connection was successfully established with the server, but then an error occurred during the login process. (provider: Shared Memory Provider, error: 0 - No process is on the other end of the pipe.) (Microsoft SQL Server, Error: 233)
-        64,
-        20,
-        0
+        233, 997, 921, 669, 617, 601, 121, 64, 20, 0, 53, 258,
+        1203, 1204, 1205, 1222, 1221,
+        1807,
+        3966, 3960, 3935,
+        4060, 4221, 4891,
+        8651, 8645,
+        9515,
+        14355,
+        10929, 10928, 10060, 10054, 10053, 10936, 10929, 10928, 10922, 10051, 10065,
+        11001,
+        17197,
+        18456,
+        20041,
+        41839, 41325, 41305, 41302, 41301, 40143, 40613, 40501, 40540, 40197, 49918, 49919, 49920
         ]
     ret = value in RETRY_CODES
     return ret
