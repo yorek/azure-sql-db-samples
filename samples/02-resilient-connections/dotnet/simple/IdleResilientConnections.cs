@@ -62,28 +62,34 @@ namespace AzureSQL.DevelopmentBestPractices
                 var spid1 = GetSPID(conn);
                 Console.WriteLine($"Current SPID is: {spid1}.");           
 
-                Console.WriteLine("Hit");
-                Console.WriteLine("[K] to kill the connection.");
-                Console.WriteLine("(a new thread will be spawn to execute the selected action)");
-                
+                Console.WriteLine("Hit [K] to kill the connection (a new thread will be spawned to execute the selected action).");                
                 var c = string.Empty;
-                while (!(new string[] {"k", "f"}).Contains(c))  {
+                while (!(new string[] {"k"}).Contains(c))  {
                     c = Console.ReadKey(intercept: true).KeyChar.ToString().ToLower();                    
                 }
             
                 Console.WriteLine("Killing session...");
-                if (c == "k") Task.Run(() => { KillSPID(spid1); }).Wait();             
+                Task.Run(() => { KillSPID(spid1); }).Wait();             
                 Console.WriteLine("Session killed...");
                 Console.WriteLine();
 
                 Console.WriteLine("Trying to execute a command after connection has been killed...");
                 
-                var spid2 = GetSPID(conn);
-                
+                var spid2 = GetSPID(conn);                
                 Console.WriteLine($"Still here. Current SPID is: {spid2}.");       
             } 
             catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                var cx = ex;
+                while (cx != null)
+                {
+                    if (cx is SqlException) {
+                        var sx = cx as SqlException;
+                        Console.WriteLine($"[{sx.GetType().Name}][SQL Error: {sx.Number}] " +  sx.Message);
+                    } else  {
+                        Console.WriteLine($"[{cx.GetType().Name}] " + cx.Message);
+                    }                    
+                    cx = cx.InnerException;
+                }
             } 
             finally {            
                 conn.Close();
