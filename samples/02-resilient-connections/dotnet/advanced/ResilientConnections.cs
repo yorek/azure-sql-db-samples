@@ -30,30 +30,29 @@ namespace AzureSQL.DevelopmentBestPractices
 
     class ResilientConnectionSample
     {
-        // Added all error code listed here: "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages"
-        // Plus all code experimentally observed during a loss of network connection (eg: cable unplugged)
-        private readonly List<int> _transientErrors = new List<int>() {
-                0, 
-                53, 
-                64,
-                121, 
-                258, 
-                4060, 
-                4221,
-                4891, 
-                10051,
-                10054, 
-                10065, 
-                10060, 
-                11001, 
-                18456, 
-                40197, 
-                40501, 
-                40613, 
-                49918, 
-                49919, 
-                49920
-            };
+        // Error list created from: 
+        // - https://github.com/dotnet/efcore/blob/main/src/EFCore.SqlServer/Storage/Internal/SqlServerTransientExceptionDetector.cs
+        // - https://docs.microsoft.com/en-us/dotnet/api/microsoft.data.sqlclient.sqlconfigurableretryfactory?view=sqlclient-dotnet-standard-4.1
+        // - https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages
+        // Manually added also
+        // 0, 18456
+        private static List<int> _transientErrors = new List<int> { 
+            233, 997, 921, 669, 617, 601, 121, 64, 20, 0, 53, 258,
+            1203, 1204, 1205, 1222, 1221,
+            1807,
+            3966, 3960, 3935,
+            4060, 4221, 4891, 
+            8651, 8645,
+            9515,
+            14355,            
+            10929, 10928, 10060, 10054, 10053, 10936, 10929, 10928, 10922, 10051, 10065,
+            11001,
+            17197,
+            18456,
+            20041,            
+            41839, 41325, 41305, 41302, 41301, 40143, 40613, 40501, 40540, 40197, 49918, 49919, 49920 
+        };
+
         private int _maxAttempts = 5;
         private int _delay = 5; // seconds
         private string _connectionString = "";
@@ -125,7 +124,7 @@ namespace AzureSQL.DevelopmentBestPractices
                 SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
 
             var csb = new SqlConnectionStringBuilder(_connectionString);
-            Console.WriteLine($"Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
+            Console.WriteLine($"[{options.SampleId:00}] Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
 
             while (!options.Token.IsCancellationRequested)
             {
@@ -177,6 +176,10 @@ namespace AzureSQL.DevelopmentBestPractices
                             Console.WriteLine($"[{options.SampleId:00}] Unmanaged Error: [{se.Number}] {se.Message}");                            
                             throw;
                         }
+                    }
+                    catch (Exception e) {
+                        Console.WriteLine($"[{options.SampleId:00}] Unhandled Exception: {e.Message}");
+                        break;
                     }
                     finally
                     {
