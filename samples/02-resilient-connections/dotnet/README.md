@@ -1,12 +1,16 @@
 # Azure SQL Connection Resiliency in .NET
 
-This sample shows how by default, using the .NET SqlClient (ADO.NET 4.5.1 or later), connection to Azure SQL DB are made recovered automatically whenever possible, as described in this whitepaper :
+The samples in this folder shows how to implement correct connection resiliency in your application. At the very minimum you don't need to do anything, as the Microsoft.Data.SqlClient (version 3.0 or later) will automatically help a bit by automatically handling "Idle Connections":
 
-https://download.microsoft.com/download/D/2/0/D20E1C5F-72EA-4505-9F26-FEF9550EFD44/Idle%20Connection%20Resiliency.docx  
+[Idle Connection Resiliency](https://download.microsoft.com/download/D/2/0/D20E1C5F-72EA-4505-9F26-FEF9550EFD44/Idle%20Connection%20Resiliency.docx  
+)
 
-https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connectivity-issues 
+The "Idle Connection Resiliency" is tested in the `simple` sample.
 
-https://docs.microsoft.com/en-us/sql/connect/ado-net/step-4-connect-resiliently-to-sql-with-ado-net?view=sql-server-ver15 
+But you should *not* stop at the basics, and you should instead take care of disconnections that may happen when a query is being executed (and so the connection is not "Idle"), by coding the logic manually or using a library like Polly:
+
+- `advanced`: manually implement a retry logic to handle transient errors
+- `automatic`: use the Polly libray to automatically apply a retry logic to handle transient errors 
 
 ## Running the samples
 
@@ -26,11 +30,10 @@ and create a new `app.config` using the `app.config.template` as a starting poin
 }
 ```
 
-then make sure you have .NET Core 3.1 installed and run
+then make sure you have .NET Core 6.0 installed and run
 
 ```bash
 dotnet run
 ```
 
-while in the `advanced` or `simple` folder.
-
+while in the `simple`, `advanced` or `automatic` folder.
