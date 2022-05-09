@@ -336,3 +336,4 @@ app.config.json
 *.bacpac
 .env
 env/
+venv/
