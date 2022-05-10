@@ -50,7 +50,7 @@ Azure Data Studio supports Jupyter Notebooks. They will be used in some samples.
 [Introduction to Azure Data Studio Notebooks](https://www.youtube.com/watch?v=Nt4kIHQ0IOc)
 ## Sample Index
 
-1. [Create Database](./samples/01-restore-database): Create an Azure SQL database
+1. [Create Database](./samples/00-create-database): Create an Azure SQL database
 1. [Restore Database](./samples/01-restore-database): Restoring a database in Azure SQL
 1. [Resilient Connections](./samples/02-resilient-connections): How to create resilient solutions with Azure SQL
 1. [Work with JSON](./samples/03-json): Working with JSON data in Azure SQL
