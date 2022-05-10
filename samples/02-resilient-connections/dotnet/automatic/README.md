@@ -1,6 +1,6 @@
 # Automatic Advanced Connection Resiliency Sample
 
-This sample uses the Polly.Net library to simplify further the handling of transient errors. Thanks to Polly.Net there is no need to write additional code to handle the retry logic.
+This sample uses the [Polly.Net](https://github.com/App-vNext/Polly) library to simplify further the handling of transient errors. Thanks to Polly.Net there is no need to write additional code to handle the retry logic.
 
 The sample will create three threads each one running a loop simulating a different use case:
 
