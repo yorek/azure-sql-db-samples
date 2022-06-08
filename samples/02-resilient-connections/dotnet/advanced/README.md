@@ -1,6 +1,6 @@
 # Advanced Connection Resiliency Sample
 
-This sample shows how to properly implement a resilient connection by trapping transient errors and retrying the executiion.
+This sample shows how to properly implement a resilient connection by trapping transient errors and retrying the execution.
 
 The sample will create three threads each one running a loop simulating a different use case:
 
@@ -18,7 +18,7 @@ The sample will keep the threads running in parallel in loop. You can see what h
 ALTER DATABASE [MyDatabase] MODIFY (SERVICE_OBJECTIVE = 'S1')
 ```
 
-on the target Azure SQL Database.
+on the target Azure SQL Database. Or if you are using a [Failover Group](https://docs.microsoft.com/en-us/azure/azure-sql/database/auto-failover-group-configure-sql-db?view=azuresql&tabs=azure-portal&pivots=azure-sql-single-db) you can try to execute a failover.
 
 The sample application will nicely handle the disconnection, with Thread 1 usually not showing any impact at all.
 
