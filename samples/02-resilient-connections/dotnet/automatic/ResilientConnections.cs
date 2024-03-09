@@ -104,9 +104,9 @@ namespace AzureSQL.DevelopmentBestPractices
                 {
                     args.Cancel = true;
                     source.Cancel();
-                    Console.WriteLine("Cancel requested...trying to be nice and waiting for threads to terminate. Hit CTRL+C again to terminate immediately.");
+                    Console.WriteLine("Cancel requested...waiting for threads to terminate. Hit CTRL+C again to terminate immediately.");
                 } else {
-                    Console.WriteLine("Terminating all threads...");
+                    Console.WriteLine("Terminating all threads...");                    
                 }
             };
 
@@ -140,6 +140,10 @@ namespace AzureSQL.DevelopmentBestPractices
                         Console.WriteLine($"[{options.SampleId:00}] Retry called {retryCount} times, next retry in: {timeSpan}). Reason: {exception.GetType().Name}{details}: {exception.Message}");
                     });
 
+            void Log(string message) {
+                Console.WriteLine($"[{options.SampleId:00}] {DateTime.Now:yyyy-MM-dd HH:mm:ss} > {message}");
+            }
+
             var waitFor = string.Empty;
             if (options.SecondsQueryWillExecute >= 0)
             {
@@ -154,34 +158,37 @@ namespace AzureSQL.DevelopmentBestPractices
                 SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective, @@SERVERNAME as ServerName;";
 
             var csb = new SqlConnectionStringBuilder(_connectionString);
-            Console.WriteLine($"[{options.SampleId:00}] Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
+            Log($"Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
 
             while (!options.Token.IsCancellationRequested)
             {
                 p.Execute(() =>{
-                    using (var conn = new SqlConnection(_connectionString))
+                    using var conn = new SqlConnection(_connectionString);
+
+                    if (options.Token.IsCancellationRequested) return;
+
+                    if (options.SecondsConnectionStayOpen >= 0)
                     {
-                        if (options.Token.IsCancellationRequested) return;
-
-                        if (options.SecondsConnectionStayOpen >= 0)
-                        {
-                            conn.Open();
-                            Task.Delay(options.SecondsConnectionStayOpen * 1000).Wait(options.Token);
-                        }
-
-                        if (options.Token.IsCancellationRequested) return;
-
-                        var ei = conn.QuerySingle<ExecutionInfo>(query);
-
-                        if (conn.State == ConnectionState.Open) conn.Close();
-
-                        if (options.SecondsBetweenQueries >= 0)
-                        {
-                            Task.Delay(options.SecondsBetweenQueries * 1000).Wait(options.Token);
-                        }
-
-                        Console.WriteLine($"[{options.SampleId:00}] {DateTime.Now:yyyy-MM-dd HH:mm:ss} > {ei}");
+                        conn.Open();
+                        Task.Delay(options.SecondsConnectionStayOpen * 1000).Wait(options.Token);
                     }
+
+                    if (options.Token.IsCancellationRequested) return;
+
+                    var ei = conn.QuerySingle<ExecutionInfo>(query);
+
+                    if (conn.State == ConnectionState.Open) conn.Close();
+
+                    if (options.Token.IsCancellationRequested) return;
+
+                    if (options.SecondsBetweenQueries >= 0)
+                    {
+                        Task.Delay(options.SecondsBetweenQueries * 1000).Wait(options.Token);
+                    }
+
+                    if (options.Token.IsCancellationRequested) return;
+
+                    Log(ei.ToString());
                 });
             }
         }
