@@ -13,11 +13,12 @@ namespace AzureSQL.DevelopmentBestPractices
     class ExecutionInfo
     {
         public int ServerProcessId = 0;
-        public string ServiceLevelObjective = String.Empty;
+        public string ServiceLevelObjective = string.Empty;
+        public string ServerName = string.Empty;
 
         public override string ToString()
         {
-            return $"SPID: {ServerProcessId}, SLO: {ServiceLevelObjective}";
+            return $"SERVER: {ServerName}, SLO: {ServiceLevelObjective}, SPID: {ServerProcessId}";
         }
     }
 
@@ -30,7 +31,7 @@ namespace AzureSQL.DevelopmentBestPractices
         public CancellationToken Token = CancellationToken.None;
     }
 
-    class ResilientConnectionSample
+    class ResilientConnectionSample(string connectionString)
     {
         // Error list created from: 
         // - https://github.com/dotnet/efcore/blob/main/src/EFCore.SqlServer/Storage/Internal/SqlServerTransientExceptionDetector.cs
@@ -38,7 +39,8 @@ namespace AzureSQL.DevelopmentBestPractices
         // - https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages
         // Manually added also
         // 0, 18456
-        private static List<int> _transientErrors = new List<int> {
+        private static readonly List<int> _transientErrors = [
+            3906,
             233, 997, 921, 669, 617, 601, 121, 64, 20, 0, 53, 258,
             1203, 1204, 1205, 1222, 1221,
             1807,
@@ -53,48 +55,42 @@ namespace AzureSQL.DevelopmentBestPractices
             18456,
             20041,
             41839, 41325, 41305, 41302, 41301, 40143, 40613, 40501, 40540, 40197, 49918, 49919, 49920
-        };
+        ];
 
-        private string _connectionString = "";
-
-        public ResilientConnectionSample(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        private readonly string _connectionString = connectionString;
 
         public void RunSample()
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            var tests = new List<SampleOptions>();
-
-            tests.Add(new SampleOptions()
+            var tests = new List<SampleOptions>
             {
-                SampleId = 1,
-                SecondsBetweenQueries = 2,
-                SecondsConnectionStayOpen = 0,
-                SecondsQueryWillExecute = 0,
-                Token = token
-            });
-
-            tests.Add(new SampleOptions()
-            {
-                SampleId = 2,
-                SecondsBetweenQueries = 0,
-                SecondsConnectionStayOpen = 2,
-                SecondsQueryWillExecute = 0,
-                Token = token
-            });
-
-            tests.Add(new SampleOptions()
-            {
-                SampleId = 3,
-                SecondsBetweenQueries = 0,
-                SecondsConnectionStayOpen = 0,
-                SecondsQueryWillExecute = 2,
-                Token = token
-            });
+                new()
+                {
+                    SampleId = 1,
+                    SecondsBetweenQueries = 2,
+                    SecondsConnectionStayOpen = 0,
+                    SecondsQueryWillExecute = 0,
+                    Token = token
+                },
+                new()
+                {
+                    SampleId = 2,
+                    SecondsBetweenQueries = 0,
+                    SecondsConnectionStayOpen = 2,
+                    SecondsQueryWillExecute = 0,
+                    Token = token
+                },
+                new()
+                {
+                    SampleId = 3,
+                    SecondsBetweenQueries = 0,
+                    SecondsConnectionStayOpen = 0,
+                    SecondsQueryWillExecute = 2,
+                    Token = token
+                }
+            };
 
             var tasks = new List<Task>();
             foreach (var t in tests)
@@ -116,7 +112,7 @@ namespace AzureSQL.DevelopmentBestPractices
 
             try
             {
-                Task.WaitAll(tasks.ToArray());
+                Task.WaitAll([.. tasks]);
             } catch (AggregateException ae)
             {
                 foreach(var e in ae.InnerExceptions)
@@ -155,7 +151,7 @@ namespace AzureSQL.DevelopmentBestPractices
                     INSERT INTO dbo.TestResiliency (ThreadId) VALUES ({options.SampleId}); 
                     {waitFor}
                 COMMIT TRAN; 
-                SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective;";
+                SELECT @@SPID AS ServerProcessId, DATABASEPROPERTYEX(DB_NAME(DB_ID()), 'ServiceObjective') AS ServiceLevelObjective, @@SERVERNAME as ServerName;";
 
             var csb = new SqlConnectionStringBuilder(_connectionString);
             Console.WriteLine($"[{options.SampleId:00}] Connecting to server: '{csb.DataSource}', database: '{csb.InitialCatalog}'");
@@ -184,7 +180,7 @@ namespace AzureSQL.DevelopmentBestPractices
                             Task.Delay(options.SecondsBetweenQueries * 1000).Wait(options.Token);
                         }
 
-                        Console.WriteLine($"[{options.SampleId:00}] {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} > {ei}");
+                        Console.WriteLine($"[{options.SampleId:00}] {DateTime.Now:yyyy-MM-dd HH:mm:ss} > {ei}");
                     }
                 });
             }
