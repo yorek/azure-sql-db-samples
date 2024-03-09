@@ -40,10 +40,10 @@ namespace AzureSQL.DevelopmentBestPractices
         // Manually added also
         // 0, 18456
         private static readonly List<int> _transientErrors = [
-            3906,
             233, 997, 921, 669, 617, 601, 121, 64, 20, 0, 53, 258,
             1203, 1204, 1205, 1222, 1221,
             1807,
+            3906, // Database in readonly mode during failover
             3966, 3960, 3935,
             4060, 4221, 4891,
             8651, 8645,
