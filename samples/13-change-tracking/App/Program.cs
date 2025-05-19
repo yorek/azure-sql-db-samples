@@ -15,14 +15,14 @@ if (string.IsNullOrEmpty(azureConnectionString)) {
 var remoteProvider = new SqlSyncChangeTrackingProvider(azureConnectionString);
 var localProvider = new SqliteSyncProvider("training-sessions.db");
 
-var tables = new string[] {"TrainingSessions"};
+var syncSetup = new SyncSetup(new string[] { "TrainingSessions" });
 
-var agent = new SyncAgent(localProvider, remoteProvider, tables);
+var agent = new SyncAgent(localProvider, remoteProvider);
 
 Console.WriteLine("Sync Started.");
 do
 {
-    var s1 = await agent.SynchronizeAsync();
+    var s1 = await agent.SynchronizeAsync(syncSetup);
 
     Console.WriteLine(s1);
 

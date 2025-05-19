@@ -1,4 +1,4 @@
-select * from dbo.TrainingSessions
+select * from dbo.TrainingSessions 
 go
 
 -- Insert sample values
@@ -9,3 +9,5 @@ values
     (sysdatetimeoffset(), 'Run', 4568, 4780, 30*60+44, 4890);
 go
 
+select * from dbo.TrainingSessions where RecordedOn >= '2023-01-01'
+go

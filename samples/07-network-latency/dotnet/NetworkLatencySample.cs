@@ -166,7 +166,7 @@ namespace AzureSQL.DevelopmentBestPractices
 
                 conn.Open();
                 using(var bc = new SqlBulkCopy(conn))                
-                {
+                {                    
                     bc.DestinationTableName = "dbo.NetworkLatencyTestCustomers";
                     bc.WriteToServer(ct);
                 }

@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dotmim.Sync.Core" Version="0.9.4" />
-    <PackageReference Include="Dotmim.Sync.Sqlite" Version="0.9.4" />
-    <PackageReference Include="Dotmim.Sync.SqlServer" Version="0.9.4" />
-    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="0.9.4" />
+    <PackageReference Include="Dotmim.Sync.Core" Version="0.9.5" />
+    <PackageReference Include="Dotmim.Sync.Sqlite" Version="0.9.5" />
+    <PackageReference Include="Dotmim.Sync.SqlServer" Version="0.9.5" />
+    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" Version="0.9.5" />
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
   </ItemGroup>
 
