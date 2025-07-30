@@ -92,4 +92,26 @@ FROM
 	)
 GO
 
+CREATE OR ALTER PROCEDURE dbo.InsertNetworkLatencyTestCustomers_NativeJSON
+	@json JSON
+AS
+INSERT INTO [dbo].[NetworkLatencyTestCustomers]
+	([CustomerID], [Title], [FirstName], [LastName], [MiddleName], [CompanyName], [SalesPerson], [EmailAddress], [Phone], [ModifiedDate])
+SELECT
+	[CustomerID], [Title], [FirstName], [LastName], [MiddleName], [CompanyName], [SalesPerson], [EmailAddress], [Phone], [ModifiedDate]
+FROM
+	OPENJSON(@json) WITH (
+		CustomerID INT,
+		Title NVARCHAR(200), 
+		FirstName NVARCHAR(200), 
+		LastName NVARCHAR(200), 
+		MiddleName NVARCHAR(200), 
+		CompanyName NVARCHAR(200), 
+		SalesPerson NVARCHAR(200),
+		EmailAddress NVARCHAR(1024),
+		Phone NVARCHAR(20),	
+		ModifiedDate DATETIME2(7)
+	)
+GO
+
 SELECT * FROM dbo.[NetworkLatencyTestCustomers]

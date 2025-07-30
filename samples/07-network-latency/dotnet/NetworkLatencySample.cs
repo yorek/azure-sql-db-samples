@@ -45,7 +45,7 @@ namespace AzureSQL.DevelopmentBestPractices
     public class NetworkLatencySample
     {
         private string _connectionString = "";
-        private const int CUSTOMERS_COUNT = 1000;
+        private const int CUSTOMERS_COUNT = 5000;
 
         public NetworkLatencySample(string connectionString)
         {
@@ -61,11 +61,13 @@ namespace AzureSQL.DevelopmentBestPractices
 
             var sw = new Stopwatch();
 
-            Action<Action<List<Customer>>, string> RunTest = (Test, message) => {
+            Action<Action<List<Customer>>, string> RunTest = (Test, message) =>
+            {
                 Console.WriteLine(message);
                 sw.Restart();
                 Test(customers);
                 sw.Stop();
+                CheckResults();
                 Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
                 Console.WriteLine();
             };
@@ -78,6 +80,8 @@ namespace AzureSQL.DevelopmentBestPractices
 
             RunTest(JsonSample, "Running *JSON* sample");
 
+            RunTest(NativeJsonSample, "Running *Native JSON* sample");
+
             RunTest(RowConstructorsSample, "Running *Row Constructors* sample");
 
             RunTest(BulkCopySample, "Running *BulkCopy* sample");
@@ -85,7 +89,7 @@ namespace AzureSQL.DevelopmentBestPractices
             Console.WriteLine("Done.");
         }
 
-        void BasicSample(List<Customer> customers)
+        private void BasicSample(List<Customer> customers)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -100,7 +104,7 @@ namespace AzureSQL.DevelopmentBestPractices
             }
         }
 
-        void DapperSample(List<Customer> customers)
+        private void DapperSample(List<Customer> customers)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -110,7 +114,7 @@ namespace AzureSQL.DevelopmentBestPractices
             }
         }
 
-        void TVPSample(List<Customer> customers)
+        private void TVPSample(List<Customer> customers)
         {
             var ct = CustomersToDataTable(customers);
 
@@ -122,7 +126,33 @@ namespace AzureSQL.DevelopmentBestPractices
             }
         }
 
-        void JsonSample(List<Customer> customers)
+        private void JsonSample(List<Customer> customers)
+        {
+            // using (var conn = new SqlConnection(_connectionString))
+            // {
+            //     conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
+
+            //     var json = JsonConvert.SerializeObject(customers);
+
+            //     conn.Execute("dbo.InsertNetworkLatencyTestCustomers_JSON", new { @json = json }, commandType: CommandType.StoredProcedure);
+            // }
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
+
+                var json = JsonConvert.SerializeObject(customers);
+
+                var cmd = new SqlCommand("dbo.InsertNetworkLatencyTestCustomers_JSON", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@json", SqlDbType.NVarChar, -1) { Value = json });
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        private void NativeJsonSample(List<Customer> customers)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -130,50 +160,56 @@ namespace AzureSQL.DevelopmentBestPractices
 
                 var json = JsonConvert.SerializeObject(customers);
 
-                conn.Execute("dbo.InsertNetworkLatencyTestCustomers_JSON", new { @json = json }, commandType: CommandType.StoredProcedure);
+                var cmd = new SqlCommand("dbo.InsertNetworkLatencyTestCustomers_NativeJSON", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@json", SqlDbType.Json) { Value = json });
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
             }
         }
 
-        void RowConstructorsSample(List<Customer> customers)
-        {            
+        private void RowConstructorsSample(List<Customer> customers)
+        {
             int s = 0;
             int b = 1000;
             if (b > customers.Count) b = customers.Count;
 
-            while (s < customers.Count)
+            using (var conn = new SqlConnection(_connectionString))
             {
-                var payload = customers.GetRange(s, b).Select(c => { return $"({c.CustomerID}, '{c.Title.EscapeQuote()}', '{c.FirstName.EscapeQuote()}', '{c.LastName.EscapeQuote()}', '{c.MiddleName.EscapeQuote()}', '{c.CompanyName.EscapeQuote()}', '{c.SalesPerson.EscapeQuote()}', '{c.EmailAddress.EscapeQuote()}', '{c.Phone.EscapeQuote()}', '{c.ModifiedDate.ToString("o")}')";});
+                conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
-                using (var conn = new SqlConnection(_connectionString))
+                while (s < customers.Count)
                 {
-                    conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
+                    var payload = customers.GetRange(s, b).Select(c => { return $"({c.CustomerID}, '{c.Title.EscapeQuote()}', '{c.FirstName.EscapeQuote()}', '{c.LastName.EscapeQuote()}', '{c.MiddleName.EscapeQuote()}', '{c.CompanyName.EscapeQuote()}', '{c.SalesPerson.EscapeQuote()}', '{c.EmailAddress.EscapeQuote()}', '{c.Phone.EscapeQuote()}', '{c.ModifiedDate.ToString("o")}')"; });
 
                     conn.Execute($"INSERT INTO [dbo].[NetworkLatencyTestCustomers] ([CustomerID], [Title], [FirstName], [LastName], [MiddleName], [CompanyName], [SalesPerson], [EmailAddress], [Phone], [ModifiedDate]) VALUES {string.Join(',', payload)}", commandType: CommandType.Text);
-                }
 
-                s += b;
-                if ((s + b) > customers.Count) b = customers.Count - s;
+                    s += b;
+                    if (s + b > customers.Count) b = customers.Count - s;
+                }
             }
         }
 
-        void BulkCopySample(List<Customer> customers)
+        private void BulkCopySample(List<Customer> customers)
         {
             var ct = CustomersToDataTable(customers);
 
-            using(var conn = new SqlConnection(_connectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
                 conn.Open();
-                using(var bc = new SqlBulkCopy(conn))                
-                {                    
+                using (var bc = new SqlBulkCopy(conn))
+                {
                     bc.DestinationTableName = "dbo.NetworkLatencyTestCustomers";
                     bc.WriteToServer(ct);
                 }
             }
         }
 
-        public List<Customer> GenerateCustomers()
+        private List<Customer> GenerateCustomers()
         {
             var userFaker = new Faker<Customer>()
                 .RuleFor(c => c.CustomerID, f => f.IndexFaker)
@@ -192,23 +228,35 @@ namespace AzureSQL.DevelopmentBestPractices
             return result;
         }
 
-        public DataTable CustomersToDataTable(List<Customer> customers)
+        private DataTable CustomersToDataTable(List<Customer> customers)
         {
             var ct = new DataTable("CustomerType");
-            var r = ObjectReader.Create(customers, 
-                "CustomerID", 
-                "Title", 
-                "FirstName", 
-                "LastName", 
-                "MiddleName", 
-                "CompanyName", 
-                "SalesPerson", 
-                "EmailAddress", 
-                "Phone", 
+            var r = ObjectReader.Create(customers,
+                "CustomerID",
+                "Title",
+                "FirstName",
+                "LastName",
+                "MiddleName",
+                "CompanyName",
+                "SalesPerson",
+                "EmailAddress",
+                "Phone",
                 "ModifiedDate"
             );
             ct.Load(r);
             return ct;
+        }
+
+        private void CheckResults()
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                var rows = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM dbo.NetworkLatencyTestCustomers");
+                if (rows != CUSTOMERS_COUNT)
+                {
+                    throw new Exception($"Expected {CUSTOMERS_COUNT} rows, but got {rows}.");
+                }                      
+            }
         }
     }
 }
