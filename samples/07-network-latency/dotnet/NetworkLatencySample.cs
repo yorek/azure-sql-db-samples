@@ -68,7 +68,7 @@ namespace AzureSQL.DevelopmentBestPractices
                 Test(customers);
                 sw.Stop();
                 CheckResults();
-                Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs");
+                Console.WriteLine($"Elapsed: {sw.ElapsedMilliseconds / 1000.0} secs, Rows/Sec: {CUSTOMERS_COUNT / (sw.ElapsedMilliseconds / 1000.0):0}");
                 Console.WriteLine();
             };
 
