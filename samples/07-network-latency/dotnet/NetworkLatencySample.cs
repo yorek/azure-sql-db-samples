@@ -45,7 +45,7 @@ namespace AzureSQL.DevelopmentBestPractices
     public class NetworkLatencySample
     {
         private string _connectionString = "";
-        private const int CUSTOMERS_COUNT = 10000;
+        private const int CUSTOMERS_COUNT = 1000;
 
         public NetworkLatencySample(string connectionString)
         {
@@ -56,7 +56,10 @@ namespace AzureSQL.DevelopmentBestPractices
         {
             var customers = GenerateCustomers();
 
+            var cb = new SqlConnectionStringBuilder(_connectionString);
+
             Console.WriteLine($"Network Latency Impact Test: Running {CUSTOMERS_COUNT} INSERT");
+            Console.WriteLine($"Database: {cb.InitialCatalog}@{cb.DataSource}");
             Console.WriteLine();
 
             var sw = new Stopwatch();
