@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Dapper;
 using Bogus;
-using Newtonsoft.Json;
 using System.Linq;
 using FastMember;
+using System.Text.Json;
 
 namespace AzureSQL.DevelopmentBestPractices
 {
@@ -135,7 +135,7 @@ namespace AzureSQL.DevelopmentBestPractices
             // {
             //     conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
-            //     var json = JsonConvert.SerializeObject(customers);
+            //     var json = JsonSerializer.Serialize(customers);
 
             //     conn.Execute("dbo.InsertNetworkLatencyTestCustomers_JSON", new { @json = json }, commandType: CommandType.StoredProcedure);
             // }
@@ -143,7 +143,7 @@ namespace AzureSQL.DevelopmentBestPractices
             {
                 conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
-                var json = JsonConvert.SerializeObject(customers);
+                var json = JsonSerializer.Serialize(customers);
 
                 var cmd = new SqlCommand("dbo.InsertNetworkLatencyTestCustomers_JSON", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -161,7 +161,7 @@ namespace AzureSQL.DevelopmentBestPractices
             {
                 conn.Execute("TRUNCATE TABLE dbo.NetworkLatencyTestCustomers");
 
-                var json = JsonConvert.SerializeObject(customers);
+                var json = JsonSerializer.Serialize(customers);
 
                 var cmd = new SqlCommand("dbo.InsertNetworkLatencyTestCustomers_NativeJSON", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
