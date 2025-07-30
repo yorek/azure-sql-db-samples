@@ -45,7 +45,7 @@ namespace AzureSQL.DevelopmentBestPractices
     public class NetworkLatencySample
     {
         private string _connectionString = "";
-        private const int CUSTOMERS_COUNT = 5000;
+        private const int CUSTOMERS_COUNT = 10000;
 
         public NetworkLatencySample(string connectionString)
         {
